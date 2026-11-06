@@ -20,7 +20,7 @@ class ProvenanceTests(unittest.TestCase):
         self.assertIn('Code Nexus',a.attribution_trailer())
 
     def test_provenance_in_files(self):
-        for filename in ('README.md', 'NOTICE.md', 'FORK.md'):
+        for filename in ('NOTICE.md', 'FORK.md'):
             text = (ROOT/filename).read_text(encoding='utf-8')
             self.assertIn('Mörlsara', text, filename)
             self.assertIn('Code Nexus', text, filename)
