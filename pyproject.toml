@@ -12,8 +12,11 @@ readme = "README.md"
 dependencies = []
 
 [tool.setuptools]
-packages = ["sagaz"]
+packages = ["sagaz", "sagaz.cti"]
 include-package-data = true
 
 [tool.setuptools.package-data]
 sagaz = ["index.html", "static/*.css", "static/*.js"]
+
+[tool.setuptools.data-files]
+"knowledge/cti" = ["knowledge/cti/lote2.json"]

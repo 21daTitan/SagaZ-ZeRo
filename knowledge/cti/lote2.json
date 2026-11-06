@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "id": "ALFA-CTI-0011",
+      "title": "Operation Endgame",
+      "status": "unverified",
+      "names": [],
+      "themes": ["law-enforcement-operation"],
+      "keywords": [],
+      "mitre": [],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0012",
+      "title": "QakBot / DuckHunt",
+      "status": "unverified",
+      "names": ["QakBot", "DuckHunt"],
+      "themes": ["malware", "botnet"],
+      "keywords": [],
+      "mitre": [
+        {"id": "S0650", "name": "QakBot", "url": "https://attack.mitre.org/software/S0650/"}
+      ],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0013",
+      "title": "Emotet",
+      "status": "unverified",
+      "names": ["Emotet"],
+      "themes": ["malware", "botnet"],
+      "keywords": [],
+      "mitre": [
+        {"id": "S0367", "name": "Emotet", "url": "https://attack.mitre.org/software/S0367/"}
+      ],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0014",
+      "title": "FIN7",
+      "status": "unverified",
+      "names": ["FIN7"],
+      "themes": ["threat-group", "cybercrime"],
+      "keywords": [],
+      "mitre": [
+        {"id": "G0046", "name": "FIN7", "url": "https://attack.mitre.org/groups/G0046/"}
+      ],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0015",
+      "title": "Conti",
+      "status": "unverified",
+      "names": ["Conti"],
+      "themes": ["ransomware", "malware"],
+      "keywords": [],
+      "mitre": [
+        {"id": "S0575", "name": "Conti", "url": "https://attack.mitre.org/software/S0575/"}
+      ],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0016",
+      "title": "LockBit / Cronos",
+      "status": "unverified",
+      "names": ["LockBit", "Cronos"],
+      "themes": ["ransomware", "malware"],
+      "keywords": [],
+      "mitre": [
+        {"id": "S1202", "name": "LockBit 3.0", "url": "https://attack.mitre.org/software/S1202/"}
+      ],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0017",
+      "title": "REvil",
+      "status": "unverified",
+      "names": ["REvil"],
+      "themes": ["ransomware", "malware"],
+      "keywords": [],
+      "mitre": [
+        {"id": "S0496", "name": "REvil", "url": "https://attack.mitre.org/software/S0496/"}
+      ],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0018",
+      "title": "Bangladesh Bank",
+      "status": "unverified",
+      "names": [],
+      "themes": ["financial-cybercrime", "banking"],
+      "keywords": [],
+      "mitre": [],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0019",
+      "title": "Ronin Bridge",
+      "status": "unverified",
+      "names": [],
+      "themes": ["crypto", "bridge"],
+      "keywords": [],
+      "mitre": [],
+      "source_refs": []
+    },
+    {
+      "id": "ALFA-CTI-0020",
+      "title": "Mt. Gox",
+      "status": "unverified",
+      "names": [],
+      "themes": ["crypto", "exchange"],
+      "keywords": [],
+      "mitre": [],
+      "source_refs": []
+    }
+  ]
+}

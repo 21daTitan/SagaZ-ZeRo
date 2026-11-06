@@ -12,7 +12,7 @@ from pathlib import Path
 import secrets
 import sys
 import threading
-from urllib.parse import urlparse
+from urllib.parse import parse_qsl, urlparse
 import uuid
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -27,6 +27,7 @@ from sagaz.gateway.service import Gateway
 from sagaz.gateway.policy import authenticate, Denied
 from sagaz.gateway.router import ProviderUnavailable
 from sagaz.gateway.protocols import ProtocolError
+from sagaz.cti import CTIError, search as cti_search, summary as cti_summary
 
 
 class Server(ThreadingHTTPServer):
@@ -81,6 +82,31 @@ class Handler(BaseHTTPRequestHandler):
             return self.send(200,(ROOT/'sagaz/static'/name).read_bytes(),kind)
         if path=='/api/skills':return self.send(200,skills())
         if path=='/api/attribution':return self.send(200,credits())
+        if path in ('/api/cti/summary', '/api/cti/search'):
+            scope=self.scope()
+            tool='sagaz_cti_summary' if path.endswith('/summary') else 'sagaz_cti_search'
+            operation='cti_summary' if path.endswith('/summary') else 'cti_search'
+            try:
+                scope.check_tool(tool)
+                query=parse_qsl(urlparse(self.path).query,keep_blank_values=True,max_num_fields=4)
+                if path.endswith('/summary'):
+                    if query:raise ValueError('Parâmetros inválidos')
+                    self.server.gateway.require(scope,operation)
+                    return self.send(200,cti_summary())
+                values={}
+                for key,value in query:
+                    if key not in ('q','limit') or key in values:raise ValueError('Parâmetros inválidos')
+                    values[key]=value
+                if 'q' not in values:raise ValueError('Parâmetro q obrigatório')
+                limit=20
+                if 'limit' in values:
+                    if not values['limit'].isascii() or not values['limit'].isdigit():raise ValueError('limit inválido')
+                    limit=int(values['limit'])
+                self.server.gateway.require(scope,operation)
+                return self.send(200,cti_search(values['q'],limit))
+            except Denied:return self.send(403,{'error':'Sessão ou permissão necessária'})
+            except ValueError as exc:return self.send(400,{'error':str(exc)})
+            except CTIError:return self.send(503,{'error':'Base CTI local indisponível'})
         if path=='/healthz':return self.send(200,{'status':'ok','service':'SagaZ ZeRo','version':credits()['version']})
         if path=='/gateway/connectors':return self.send(200,{'entries':[{'name':'local','available':True,'kind':'preparation'},{'name':'openai_compatible','available':connection()['configured'],'kind':'optional_provider'}],'shell_enabled':False})
         if path=='/api/connection' and self.scope().connector!='local-ui':return self.send(403,{'error':'Sessão necessária'})

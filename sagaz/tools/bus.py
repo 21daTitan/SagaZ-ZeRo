@@ -13,9 +13,11 @@ class Bus:
         scope.check_tool(name)
         if name not in BUILTINS:
             raise Denied('Unknown or disabled tool')
-        if arguments not in ({}, None):
-            raise ValueError('No arguments accepted for this tool')
-        result = BUILTINS[name]()
+        if arguments is None:
+            arguments = {}
+        if not isinstance(arguments, dict):
+            raise ValueError('Tool arguments must be an object')
+        result = BUILTINS[name](arguments)
         if self.audit:
             self.audit.append('tool_call', {'name': name, 'connector': scope.connector})
         return result

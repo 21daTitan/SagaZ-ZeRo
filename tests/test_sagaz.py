@@ -71,7 +71,7 @@ class SagaZTests(unittest.TestCase):
             self.assertEqual(status,200);self.assertIn(kind,headers['Content-Type'])
             self.assertIn("script-src 'self';",headers['Content-Security-Policy'])
         status,_,body=self.request('GET','/api/skills');self.assertEqual(status,200)
-        data=json.loads(body);self.assertEqual(data['count'],6)
+        data=json.loads(body);self.assertEqual(data['count'],7)
         self.assertTrue(all(len(item['description'])>20 for item in data['entries']))
         with patch.dict(m.os.environ,{'DSANT_API_KEY':'secret-test-value','DSANT_BASE_URL':'https://example.invalid/v1','DSANT_MODEL':'my-model'}):
             self.login()

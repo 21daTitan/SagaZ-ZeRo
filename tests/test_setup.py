@@ -54,7 +54,7 @@ class SetupTests(unittest.TestCase):
             self.assertIn('"scope": "hot"',hot.read_text(encoding='utf-8'))
 
     def test_package_integrity(self):
-        self.assertEqual(len(list(m.SKILLS.glob('*/SKILL.md'))),6)
+        self.assertEqual(len(list(m.SKILLS.glob('*/SKILL.md'))),7)
         for skill in m.SKILLS.iterdir():
             self.assertIn('name: '+skill.name,(skill/'SKILL.md').read_text(encoding='utf-8'))
         self.assertTrue(m.doctor()['core_ready'])

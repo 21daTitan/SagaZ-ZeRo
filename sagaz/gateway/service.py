@@ -73,7 +73,7 @@ class Gateway:
 
     def mcp(self, scope, payload):
         self.require(scope, "mcp")
-        return dispatch(payload, scope)
+        return dispatch(payload, scope, audit=self.audit)
 
     def select(self, scope, payload):
         self.require(scope, "skills_select")

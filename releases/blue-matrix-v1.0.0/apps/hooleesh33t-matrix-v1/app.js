@@ -19,7 +19,7 @@
   $('#closeMenu').onclick=()=>$('#sidebar').classList.remove('open');
   function bubble(sender,text){
     $('#hero')?.remove();const row=document.createElement('div');row.className=`message ${sender==='Você'?'from-user':'from-agent'}`;
-    const name=document.createElement('span');name.className='sender';name.textContent=sender==='Você'?'EU':'SZ';
+    const name=document.createElement('span');name.className='sender';name.textContent=sender==='Você'?'EU':'SagaZ-ZeRo';
     const content=document.createElement('div');content.className='bubble';content.textContent=text;
     row.append(name,content);$('#chatFeed').append(row);$('#chatFeed').scrollTop=$('#chatFeed').scrollHeight;
   }
@@ -71,7 +71,22 @@
     try{const content=await file.text();$('#filePreview').textContent=content.slice(0,10000)+(content.length>10000?'\n… [prévia limitada]':'');}catch{$('#filePreview').textContent='Não foi possível ler o arquivo.';}
   }
   $('#fileInput').onchange=e=>{for(const f of e.target.files){if(attachments.length>=12)break;attachments.push(f);}renderAttachments();e.target.value='';};
-  $('#commandPreview').onclick=()=>{const cmd=$('#commandInput').value.trim();if(!cmd)return;$('#terminalLog').textContent+=`\n$ ${cmd}\n[PREVIEW] Não executado. O Core precisa validar sessão, permissões e aprovação.`;$('#commandInput').value='';};
+  function formatCti(data,isSummary){
+    if(isSummary)return `Base CTI: ${data.count} registros\nStatus: ${JSON.stringify(data.status_counts)}\n\n${data.records.map(item=>`${item.id} · ${item.title} [${item.status}]`).join('\n')}`;
+    if(!data.results.length)return `Nenhum registro para: ${data.query}`;
+    return `Busca: ${data.query} · ${data.count} resultado(s)\n\n${data.results.map(item=>`${item.id} · ${item.title} [${item.status}]`).join('\n')}`;
+  }
+  $('#commandPreview').onclick=async()=>{
+    const cmd=$('#commandInput').value.trim();if(!cmd)return;$('#commandInput').value='';
+    const match=cmd.match(/^\/cti(?:\s+(.+))?$/i);$('#terminalLog').textContent+=`\n$ ${cmd}\n`;
+    if(!match){$('#terminalLog').textContent+='[PREVIEW] Não executado. O Core precisa validar sessão, permissões e aprovação.';return;}
+    try{
+      const query=match[1]?.trim();const url=query?`/api/cti/search?q=${encodeURIComponent(query)}`:'/api/cti/summary';
+      const response=await fetch(url,{cache:'no-store',credentials:'same-origin'});const data=await response.json();
+      if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+      $('#terminalLog').textContent+=formatCti(data,!query);
+    }catch(error){$('#terminalLog').textContent+=`CTI indisponível: ${error.message}`;}
+  };
   try{const s=JSON.parse(localStorage.getItem('sagaz.study.v1')||'null');if(s){$('#studyTitle').value=s.title||'';$('#studyBody').value=s.body||'';}}catch{}
   $('#saveStudy').onclick=()=>{const s={title:$('#studyTitle').value,body:$('#studyBody').value,updatedAt:new Date().toISOString(),scope:'local-browser'};try{localStorage.setItem('sagaz.study.v1',JSON.stringify(s));$('#studyStatus').textContent='Salvo apenas neste navegador. Exporte para compartilhar.';}catch{$('#studyStatus').textContent='O navegador bloqueou o armazenamento local.';}};
   $('#exportStudy').onclick=()=>{const data={title:$('#studyTitle').value,body:$('#studyBody').value,exportedAt:new Date().toISOString()};const a=document.createElement('a');const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=url;a.download='sagaz-estudo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};

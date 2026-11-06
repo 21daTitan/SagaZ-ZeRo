@@ -15,16 +15,30 @@ import mimetypes
 import os
 from pathlib import Path
 import secrets
+import sys
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from threading import Lock
 from time import monotonic, time
-from urllib.parse import unquote, urlsplit
+from urllib.parse import parse_qsl, unquote, urlsplit
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 PROJECT = Path(__file__).resolve().parent.parent
 APP_ROOT = (PROJECT / 'apps').resolve()
+CORE_ROOT = Path(os.environ.get('SAGAZ_CORE_ROOT', PROJECT.parents[1])).resolve()
+if str(CORE_ROOT) not in sys.path:
+    sys.path.insert(0, str(CORE_ROOT))
+try:
+    from sagaz.cti import CTIError, search as cti_search, summary as cti_summary
+    from sagaz.gateway.policy import LOCAL_UI
+    from sagaz.gateway.service import Gateway
+    CTI_GATEWAY = Gateway(CORE_ROOT / 'projects' / 'hooleesh33t' / 'state')
+except ImportError:
+    CTIError = RuntimeError
+    cti_search = cti_summary = None
+    LOCAL_UI = CTI_GATEWAY = None
+CTI_READY = CTI_GATEWAY is not None
 HOST = os.environ.get('SAGAZ_BIND', '127.0.0.1')
 PORT = int(os.environ.get('SAGAZ_PORT', '8765'))
 UPSTREAM = os.environ.get('SAGAZ_UPSTREAM_URL', 'https://api.openai.com/v1/chat/completions').strip()
@@ -33,7 +47,8 @@ API_KEY = os.environ.get('SAGAZ_API_KEY', '').strip()
 ADMIN_PASSWORD = os.environ.get('SAGAZ_ADMIN_PASSWORD', '')
 SESSION_SECRET = os.environ.get('SAGAZ_SESSION_SECRET', '')
 COOKIE_SECURE = os.environ.get('SAGAZ_COOKIE_SECURE', '0') == '1'
-AUTH_READY = bool(API_KEY and ADMIN_PASSWORD and len(SESSION_SECRET) >= 32)
+SESSION_READY = bool(ADMIN_PASSWORD and len(SESSION_SECRET) >= 32)
+AUTH_READY = bool(API_KEY and SESSION_READY)
 SESSION_TTL = 12 * 3600
 COOKIE_NAME = 'sagaz_sid'
 LOCK = Lock()
@@ -55,7 +70,7 @@ def new_session():
 
 
 def verify_session(cookie_header):
-    if not AUTH_READY or not cookie_header:
+    if not SESSION_READY or not cookie_header:
         return None
     try:
         jar = SimpleCookie()
@@ -128,18 +143,56 @@ class App(BaseHTTPRequestHandler):
         return True
 
     def do_GET(self):
-        path = urlsplit(self.path).path
+        parsed = urlsplit(self.path)
+        path = parsed.path
         if path == '/healthz':
             return self.send_json(200, {'ok': True, 'service': 'sagaz-web-preview'})
         if path == '/api/v1/status':
             active = bool(self.get_session())
             return self.send_json(200, {
                 'service': 'sagaz-zero', 'chat': bool(AUTH_READY and active and safe_upstream()),
-                'auth_required': AUTH_READY, 'authenticated': active,
-                'model': MODEL if active else None,
-                'capabilities': ['chat'] if active and safe_upstream() else [],
+                'auth_required': SESSION_READY, 'authenticated': active,
+                'model': MODEL if active and AUTH_READY else None,
+                'capabilities': ['chat'] if active and AUTH_READY and safe_upstream() else [],
                 'preview': True,
             })
+        if path in ('/api/cti/summary', '/api/cti/search'):
+            if not SESSION_READY or not self.get_session():
+                return self.send_json(401, {'error': 'authentication_required'})
+            if not self.good_origin():
+                return self.send_json(403, {'error': 'request_not_allowed'})
+            if not CTI_READY:
+                return self.send_json(503, {'error': 'cti_unavailable'})
+            tool = 'sagaz_cti_summary' if path.endswith('/summary') else 'sagaz_cti_search'
+            operation = 'cti_summary' if path.endswith('/summary') else 'cti_search'
+            try:
+                LOCAL_UI.check_tool(tool)
+                params = parse_qsl(parsed.query, keep_blank_values=True, max_num_fields=4)
+                if path.endswith('/summary'):
+                    if params:
+                        raise ValueError('invalid_parameters')
+                    CTI_GATEWAY.require(LOCAL_UI, operation)
+                    return self.send_json(200, cti_summary())
+                values = {}
+                for key, value in params:
+                    if key not in ('q', 'limit') or key in values:
+                        raise ValueError('invalid_parameters')
+                    values[key] = value
+                if 'q' not in values:
+                    raise ValueError('missing_query')
+                limit = 20
+                if 'limit' in values:
+                    if not values['limit'].isascii() or not values['limit'].isdigit():
+                        raise ValueError('invalid_limit')
+                    limit = int(values['limit'])
+                CTI_GATEWAY.require(LOCAL_UI, operation)
+                return self.send_json(200, cti_search(values['q'], limit))
+            except PermissionError:
+                return self.send_json(403, {'error': 'permission_denied'})
+            except ValueError as exc:
+                return self.send_json(400, {'error': str(exc)})
+            except CTIError:
+                return self.send_json(503, {'error': 'cti_unavailable'})
         if path in ('/', '/index.html', '/creator', '/creator/'):
             target = ('/apps/dsant-creator-v1/index.html'
                       if path in ('/creator', '/creator/') else
@@ -167,7 +220,7 @@ class App(BaseHTTPRequestHandler):
         if self.headers.get('X-SagaZ-Request') != '1' or not self.good_origin():
             return self.send_json(403, {'error': 'request_not_allowed'})
         if path == '/api/v1/login':
-            if not AUTH_READY:
+            if not SESSION_READY:
                 return self.send_json(503, {'error': 'authentication_not_configured'})
             addr = self.client_address[0]
             now = monotonic()
@@ -201,6 +254,8 @@ class App(BaseHTTPRequestHandler):
             return self.send_json(200, {'ok': True})
         if path != '/api/v1/chat':
             return self.send_json(404, {'error': 'not_found'})
+        if not AUTH_READY:
+            return self.send_json(503, {'error': 'chat_not_configured'})
         if not safe_upstream():
             return self.send_json(503, {'error': 'upstream_not_allowed'})
         payload = self.json_input()
@@ -233,7 +288,7 @@ class App(BaseHTTPRequestHandler):
 
 def main():
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
-    if API_KEY and not AUTH_READY:
+    if API_KEY and not SESSION_READY:
         raise SystemExit('ERRO: para ativar chat, defina SAGAZ_ADMIN_PASSWORD e SAGAZ_SESSION_SECRET (>= 32 caracteres).')
     if AUTH_READY and not safe_upstream():
         raise SystemExit('ERRO: URL do provedor não permitida. Use HTTPS ou HTTP em localhost.')
