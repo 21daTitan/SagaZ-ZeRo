@@ -1,0 +1,7 @@
+# No external providers are active until the operator configures DSANT_*.
+providers:
+  - id: openai-compatible
+    configured_from: DSANT_BASE_URL
+    model_from: DSANT_MODEL
+    requires_explicit_selection: true
+    tested_remote: false

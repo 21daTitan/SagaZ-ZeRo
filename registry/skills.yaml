@@ -1,0 +1,7 @@
+# Deterministic one-skill selection; runtime source is sagaz/gateway/skills.py.
+skills:
+  - rataria
+  - merovingian
+  - keymaker
+  - niobe
+  - forge

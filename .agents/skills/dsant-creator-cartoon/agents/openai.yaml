@@ -1,0 +1,14 @@
+interface:
+  display_name: dSanT Creator Cartoon
+  short_description: Cartoon, 3D cinematográfico e automotivo por nicho
+  default_prompt: Use $dsant-creator-cartoon para produzir meu vídeo, escolhendo método,
+    nicho e rota Flow ou Remotion, mantendo calendário e personagens organizados.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

@@ -1,0 +1,12 @@
+.git
+.env
+.env.*
+!.env.example
+.venv
+projects
+state
+exports
+backups
+dist
+__pycache__
+*.pyc

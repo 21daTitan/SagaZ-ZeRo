@@ -1,0 +1,14 @@
+interface:
+  display_name: dSantCreator
+  short_description: Copy, referências e produção audiovisual integrada
+  default_prompt: Use $dsant-creator para criar uma campanha com roteiro, CTA e plano
+    de produção.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true
