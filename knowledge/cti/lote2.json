@@ -1,0 +1,214 @@
+[
+  {
+    "knowledge_id": "ALFA-CTI-0011",
+    "category": "malware_ecosystem",
+    "topic": "Operation Endgame 2025",
+    "technical_description": "Operações policiais contra infraestrutura de loaders e infostealers em maio e novembro de 2025. Os quantitativos e fases devem ser conferidos por fontes primárias.",
+    "related_entities": [
+      "Rhadamanthys",
+      "VenomRAT",
+      "Elysium",
+      "Europol"
+    ],
+    "mitre_techniques": [
+      "T1071",
+      "T1105"
+    ],
+    "sources": [
+      "https://www.europol.europa.eu/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0012",
+    "category": "malware_ecosystem",
+    "topic": "QakBot / Operation DuckHunt",
+    "technical_description": "Botnet QakBot utilizada em campanhas de acesso inicial; operação internacional de desmantelamento em agosto de 2023. Dados de escala e apreensões requerem conferência.",
+    "related_entities": [
+      "QakBot",
+      "FBI"
+    ],
+    "mitre_techniques": [
+      "T1566.001",
+      "T1071"
+    ],
+    "sources": [
+      "https://www.justice.gov/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0013",
+    "category": "malware_ecosystem",
+    "topic": "Emotet",
+    "technical_description": "Família de malware e botnet associada a distribuição por e-mail, hijacking de threads e infraestrutura de comando e controle; dados de servidores por país não validados.",
+    "related_entities": [
+      "Emotet",
+      "TrickBot",
+      "Europol"
+    ],
+    "mitre_techniques": [
+      "T1566.001"
+    ],
+    "sources": [
+      "https://www.europol.europa.eu/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0014",
+    "category": "malware_ecosystem",
+    "topic": "FIN7 (G0046)",
+    "technical_description": "Grupo financeiramente motivado. Técnicas relatadas incluem spear phishing, PowerShell, scheduled tasks, application shimming e assinatura de código; mapeamento conforme MITRE.",
+    "related_entities": [
+      "FIN7",
+      "Carbanak",
+      "Carbon Spider"
+    ],
+    "mitre_techniques": [
+      "T1566.001",
+      "T1059.001",
+      "T1053.005",
+      "T1546.011",
+      "T1553.002"
+    ],
+    "sources": [
+      "https://attack.mitre.org/groups/G0046/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0015",
+    "category": "malware_ecosystem",
+    "topic": "Conti e possíveis sucessores",
+    "technical_description": "Operação RaaS desarticulada em 2022. Relações com outros grupos variam em evidência; não inferir sucessão organizacional só por semelhanças técnicas.",
+    "related_entities": [
+      "Conti",
+      "Black Basta",
+      "Royal",
+      "BlackSuit",
+      "Akira"
+    ],
+    "mitre_techniques": [
+      "T1486",
+      "T1021"
+    ],
+    "sources": [
+      "https://www.cisa.gov/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0016",
+    "category": "malware_ecosystem",
+    "topic": "LockBit / Operation Cronos",
+    "technical_description": "Ação policial internacional contra LockBit em fevereiro de 2024; métricas de servidores, contas congeladas e chaves devem ser associadas às datas respectivas.",
+    "related_entities": [
+      "LockBit",
+      "NCA",
+      "FBI"
+    ],
+    "mitre_techniques": [
+      "T1486"
+    ],
+    "sources": [
+      "https://www.nationalcrimeagency.gov.uk/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0017",
+    "category": "malware_ecosystem",
+    "topic": "REvil (Sodinokibi)",
+    "technical_description": "Grupo de ransomware associado publicamente a incidentes JBS e Kaseya. Alegação de reativação em 2025 permanece não verificada nesta coleção.",
+    "related_entities": [
+      "REvil",
+      "Sodinokibi",
+      "JBS",
+      "Kaseya"
+    ],
+    "mitre_techniques": [
+      "T1486"
+    ],
+    "sources": [
+      "https://www.justice.gov/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0018",
+    "category": "historical_incidents",
+    "topic": "Bangladesh Bank SWIFT (2016)",
+    "technical_description": "Tentativa de transferência fraudulenta via SWIFT com prejuízo efetivo noticiado de cerca de US$ 81 milhões; atribuições e detalhes técnicos requerem fontes primárias.",
+    "related_entities": [
+      "Bangladesh Bank",
+      "SWIFT",
+      "Lazarus Group"
+    ],
+    "mitre_techniques": [],
+    "sources": [
+      "https://www.justice.gov/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0019",
+    "category": "historical_incidents",
+    "topic": "Ronin Bridge (2022)",
+    "technical_description": "Comprometimento de validadores e subtração de criptomoedas na Ronin Bridge; análise das transferências deve distinguir técnica de acesso de transações na blockchain.",
+    "related_entities": [
+      "Ronin",
+      "Sky Mavis",
+      "Lazarus Group"
+    ],
+    "mitre_techniques": [],
+    "sources": [
+      "https://www.fbi.gov/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  },
+  {
+    "knowledge_id": "ALFA-CTI-0020",
+    "category": "historical_incidents",
+    "topic": "Mt. Gox (2014)",
+    "technical_description": "Colapso da exchange após perda de BTC. Não atribuir todo o incidente a vulnerabilidade do protocolo Bitcoin. Prazo judicial e valores restantes exigem consulta atualizada.",
+    "related_entities": [
+      "Mt. Gox"
+    ],
+    "mitre_techniques": [],
+    "sources": [
+      "https://www.mtgox.com/"
+    ],
+    "evidence_status": "unverified",
+    "confidence": "unassessed",
+    "provenance": "operator_supplied_lote2_2026-11-06",
+    "notes": "Fonte indicada, sem verificação independente nesta versão."
+  }
+]

@@ -13,9 +13,14 @@ class Bus:
         scope.check_tool(name)
         if name not in BUILTINS:
             raise Denied('Unknown or disabled tool')
-        if arguments not in ({}, None):
-            raise ValueError('No arguments accepted for this tool')
-        result = BUILTINS[name]()
+        if name == 'sagaz_cti_search':
+            if not isinstance(arguments, dict) or set(arguments) - {'query', 'limit'}:
+                raise ValueError('Invalid CTI search arguments')
+            result = BUILTINS[name](arguments.get('query'), arguments.get('limit', 10))
+        else:
+            if arguments not in ({}, None):
+                raise ValueError('No arguments accepted for this tool')
+            result = BUILTINS[name]()
         if self.audit:
             self.audit.append('tool_call', {'name': name, 'connector': scope.connector})
         return result

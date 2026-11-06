@@ -9,6 +9,13 @@ TOOLS = [
      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False}},
     {"name": "sagaz_skills", "description": "List installed skill manifests",
      "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False}},
+    {"name": "sagaz_cti_summary", "description": "Summarize unverified ALFA CTI records",
+     "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False}},
+    {"name": "sagaz_cti_search", "description": "Read-only CTI search; returned claims are unverified",
+     "inputSchema": {"type": "object", "properties": {
+         "query": {"type": "string", "minLength": 1, "maxLength": 120},
+         "limit": {"type": "integer", "minimum": 1, "maximum": 20}},
+         "required": ["query"], "additionalProperties": False}},
 ]
 RESOURCES = [{"uri": "sagaz://provenance", "name": "Provenance", "mimeType": "application/json"}]
 PROMPTS = [{"name": "sagaz_brief", "description": "Prepare a contextual brief for offline use",

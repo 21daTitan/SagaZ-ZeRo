@@ -12,7 +12,7 @@ from pathlib import Path
 import secrets
 import sys
 import threading
-from urllib.parse import urlparse
+from urllib.parse import urlparse, parse_qs
 import uuid
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -22,6 +22,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 from sagaz.services import CORE, prepare_task, research
 from sagaz.catalog import skills, connection
+from sagaz.cti import search as cti_search, summary as cti_summary
 from sagaz.attribution import credits
 from sagaz.gateway.service import Gateway
 from sagaz.gateway.policy import authenticate, Denied
@@ -80,6 +81,19 @@ class Handler(BaseHTTPRequestHandler):
             kind='text/css; charset=utf-8' if name.endswith('.css') else 'text/javascript; charset=utf-8'
             return self.send(200,(ROOT/'sagaz/static'/name).read_bytes(),kind)
         if path=='/api/skills':return self.send(200,skills())
+        if path in ('/api/cti/search', '/api/cti/summary'):
+            if self.scope().connector == 'public':
+                return self.send(403, {'error': 'Autenticação necessária'})
+            try:
+                if path == '/api/cti/summary':
+                    return self.send(200, cti_summary())
+                params = parse_qs(urlparse(self.path).query, keep_blank_values=True)
+                if set(params) - {'q', 'limit'} or len(params.get('q', [])) != 1 or len(params.get('limit', [])) > 1:
+                    raise ValueError('Invalid CTI query parameters')
+                limit = int(params.get('limit', ['10'])[0])
+                return self.send(200, cti_search(params['q'][0], limit))
+            except (ValueError, TypeError, KeyError) as exc:
+                return self.send(400, {'error': str(exc)})
         if path=='/api/attribution':return self.send(200,credits())
         if path=='/healthz':return self.send(200,{'status':'ok','service':'SagaZ ZeRo','version':credits()['version']})
         if path=='/gateway/connectors':return self.send(200,{'entries':[{'name':'local','available':True,'kind':'preparation'},{'name':'openai_compatible','available':connection()['configured'],'kind':'optional_provider'}],'shell_enabled':False})
