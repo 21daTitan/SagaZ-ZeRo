@@ -20,7 +20,7 @@ ROOT=Path(__file__).resolve().parents[1]
 # Keep the launcher usable as a script and the public API used by existing callers.
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from sagaz.services import CORE, prepare_task, research
+from sagaz.services import CORE, operator_command, prepare_task, research
 from sagaz.catalog import skills, connection
 from sagaz.cti import search as cti_search, summary as cti_summary
 from sagaz.attribution import credits
@@ -28,6 +28,10 @@ from sagaz.gateway.service import Gateway
 from sagaz.gateway.policy import authenticate, Denied
 from sagaz.gateway.router import ProviderUnavailable
 from sagaz.gateway.protocols import ProtocolError
+
+
+MATRIX_URL = '/apps/hooleesh33t-matrix-v1/'
+MATRIX = ROOT / 'releases/blue-matrix-v1.0.0' / MATRIX_URL.strip('/')
 
 
 class Server(ThreadingHTTPServer):
@@ -75,7 +79,16 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self.valid_host():return self.send(421,{'error':'Host não permitido'})
         path=urlparse(self.path).path
-        if path=='/':return self.send(200,(ROOT/'sagaz/index.html').read_bytes(),'text/html; charset=utf-8',cookie=True)
+        if path in ('/', MATRIX_URL + 'index.html'):
+            page = (MATRIX / 'index.html').read_bytes()
+            for name in ('styles.css', 'app.js'):
+                page = page.replace(('./' + name).encode(), (MATRIX_URL + name).encode())
+            return self.send(200, page, 'text/html; charset=utf-8', cookie=True)
+        if path in (MATRIX_URL + 'styles.css', MATRIX_URL + 'app.js'):
+            name = path.rsplit('/', 1)[-1]
+            kind = 'text/css' if name.endswith('.css') else 'text/javascript'
+            return self.send(200, (MATRIX / name).read_bytes(), kind)
+        if path=='/legacy':return self.send(200,(ROOT/'sagaz/index.html').read_bytes(),'text/html; charset=utf-8',cookie=True)
         if path in ('/assets/app.css', '/assets/app.js'):
             name=path.rsplit('/',1)[-1]
             kind='text/css; charset=utf-8' if name.endswith('.css') else 'text/javascript; charset=utf-8'
@@ -151,10 +164,14 @@ class Handler(BaseHTTPRequestHandler):
         try:
             data=json.loads(self.rfile.read(length))
             if not isinstance(data,dict):raise ValueError('Corpo JSON inválido')
-            if self.path in ('/api/chat','/api/research') and scope.connector!='local-ui':
+            if self.path in ('/api/chat','/api/research','/api/matrix/chat') and scope.connector!='local-ui':
                 raise Denied('Somente sessão local pode preparar tarefas ou pesquisar')
             if self.path=='/api/chat':
                 result=prepare_task(data.get('brief'),data.get('niche','general'),data.get('method','cinematic-3d'),data.get('use_model',False),self.server.state_root,parent_id=data.get('parent_id'))
+            elif self.path=='/api/matrix/chat':
+                result = operator_command(data.get('brief'), state_root=self.server.state_root,
+                                          parent_id=data.get('parent_id'),
+                                          use_model=os.environ.get('SAGAZ_MATRIX_USE_MODEL') == '1')
             elif self.path=='/api/research':result=research(data.get('url',''),self.server.state_root)
             elif self.path=='/v1/chat/completions':result=self.server.gateway.chat(scope,data)
             elif self.path=='/mcp':result=self.server.gateway.mcp(scope,data)
@@ -183,13 +200,13 @@ def serve(port=8080,state_root=None,host=None):
 def cli(use_model=False):
     blue='\033[38;5;39m' if sys.stdout.isatty() else ''
     reset='\033[0m' if blue else ''
-    print(blue+'SagaZ · Console azul · digite sair para encerrar'+reset)
+    print(blue+'HooLeeSh33t Matrix · /cti · /skills · /status · /criar <briefing> · sair'+reset)
     while True:
         try:brief=input(blue+'SagaZ > '+reset).strip()
         except (EOFError,KeyboardInterrupt):break
         if brief.casefold() in ('sair','exit','quit'):break
         if not brief:continue
-        try:print(prepare_task(brief,use_model=use_model)['answer'])
+        try:print(operator_command(brief,use_model=use_model)['answer'])
         except (ValueError,OSError) as exc:print('Erro:',exc)
 
 if __name__=='__main__':

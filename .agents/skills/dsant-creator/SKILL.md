@@ -7,6 +7,10 @@ description: Implementar o agente dSantCreator para campanhas, copywriting, CTA,
 
 Executar em PT-BR, com respostas curtas e entregas verificáveis. Ser o coordenador das capacidades existentes, sem chamar uma configuração textual de modelo treinado ou serviço autônomo.
 
+## Entrada única no SagaZ
+
+Receber o briefing em `/criar <briefing>` ou `python -m sagaz criar "<briefing>"`. Inferir se o pedido é de copy e CTA, roteiro, estratégia ou análise de referência. Para copy e roteiro, entregar um gancho concreto, argumento apoiado pelo material recebido, um CTA e uma métrica coerente com o objetivo. Selecionar internamente os procedimentos pertinentes.
+
 ## Fluxo
 
 1. Ler `references/workflow.md` e identificar tarefa, nicho, método, rota, objetivo e prova disponível. Se faltar algo reversível, assumir e registrar. Perguntar somente o que impede a entrega. Consultar estado anterior antes de alterar cânone.

@@ -6,6 +6,9 @@
   const labels = {chat:'Conversa',connections:'Conexões',commands:'Comandos',files:'Arquivos',studies:'Estudos'};
   const attachments = [];
   let connected = false;
+  let matrixCore = false;
+  let parentId = null;
+  let sending = false;
   let authenticationRequired = false;
   const api = {status:'/api/v1/status',chat:'/api/v1/chat'};
   function setView(view){
@@ -25,13 +28,14 @@
   }
   function localCommand(input){
     const cmd=input.trim().toLowerCase();
-    if(cmd==='/ajuda'||cmd==='/help')return 'Comandos locais: /ajuda, /status, /modelos, /limpar. Outros comandos exigem o SagaZ Core conectado.';
-    if(cmd==='/status')return connected?'Core detectado; serviços avançados dependem de autorização.':'Modo prévia. Nenhum backend de IA ou executor remoto está conectado.';
-    if(cmd==='/modelos')return 'Conecte o gateway BYOK no backend. A página não solicita nem armazena chaves de API.';
-    if(cmd==='/limpar'){ $('#chatFeed').replaceChildren();return 'Conversa local limpa.'; }
+    if(cmd==='/ajuda'||cmd==='/help')return matrixCore ? 'Comandos: /cti [termo], /skills, /status, /modelos, /criar <briefing>, /limpar.' : 'Comandos locais: /ajuda, /status, /modelos, /limpar.';
+    if(!matrixCore && cmd==='/status')return connected?'Core detectado; serviços avançados dependem de autorização.':'Modo prévia. Nenhum backend de IA ou executor remoto está conectado.';
+    if(!matrixCore && cmd==='/modelos')return 'Conecte o gateway BYOK no backend. A página não solicita nem armazena chaves de API.';
+    if(cmd==='/limpar'){ parentId=null;$('#chatFeed').replaceChildren();return 'Conversa local limpa.'; }
     return null;
   }
   async function send(){
+    if(sending)return;
     const input=$('#prompt').value.trim();if(!input && !attachments.length)return;
     const names=attachments.map(f=>f.name).join(', ');
     bubble('Você',input+(names?`\n📎 Anexos: ${names}`:''));$('#prompt').value='';
@@ -39,20 +43,25 @@
     if(authenticationRequired && !connected){$('#authOverlay').hidden=false;$('#loginPassword').focus();bubble('SagaZ','É necessário autenticar no Core para consultar a IA.');return;}
     if(!connected){bubble('SagaZ','Interface de prévia: esta solicitação ainda não foi enviada à IA. Para processamento real, integre o SagaZ Core ao contrato /api/v1/chat. Seus anexos permanecem somente neste navegador.');return;}
     if(attachments.length){bubble('SagaZ','Anexos exigem o endpoint seguro de uploads /api/v1/files, que não está habilitado nesta prévia. Nenhum arquivo foi enviado.');return;}
+    sending=true;
     try{
       const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
       let response;
-      try { response=await fetch(api.chat,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-SagaZ-Request':'1'},body:JSON.stringify({message:input}),signal:controller.signal}); }
+      try { response=await fetch(matrixCore ? '/api/matrix/chat' : api.chat,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-SagaZ-Request':'1'},body:JSON.stringify(matrixCore ? {brief:input,parent_id:parentId} : {message:input}),signal:controller.signal}); }
       finally{clearTimeout(timeout);}
-      if(!response.ok)throw new Error(`HTTP ${response.status}`);
-      const data=await response.json();if(typeof data.reply!=='string')throw Error('Resposta inválida do backend');bubble('SagaZ',data.reply);
-    }catch(e){bubble('SagaZ',`Falha ao consultar o Core (${e.message}). Confira o contrato e os logs do servidor.`);}
+      const data=await response.json();
+      if(!response.ok)throw new Error(typeof data.error==='string' ? data.error : `HTTP ${response.status}`);
+      const answer=matrixCore ? data.answer : data.reply;
+      if(typeof answer!=='string')throw Error('Resposta inválida do backend');
+      if(data.id)parentId=data.id;
+      bubble('SagaZ',answer);
+    }catch(e){bubble('SagaZ',`Falha ao consultar o Core (${e.message}). Confira os logs do servidor.`);}finally{sending=false;}
   }
   $('#chatForm').addEventListener('submit',e=>{e.preventDefault();send();});
   $('#prompt').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
   $$('.quick-prompts button').forEach(b=>b.onclick=()=>{$('#prompt').value=b.dataset.prompt;$('#prompt').focus();});
   $('#slashBtn').onclick=()=>{$('#prompt').value='/ajuda';$('#prompt').focus();};
-  $('#newChat').onclick=()=>{$('#chatFeed').replaceChildren();attachments.length=0;renderAttachments();setView('chat');bubble('SagaZ','Nova conversa iniciada. /ajuda mostra os comandos disponíveis.');if(connected)fetch('/api/v1/chat/reset',{method:'POST',credentials:'same-origin',headers:{'X-SagaZ-Request':'1'}}).catch(()=>{});};
+  $('#newChat').onclick=()=>{if(sending)return;parentId=null;$('#chatFeed').replaceChildren();attachments.length=0;renderAttachments();setView('chat');bubble('SagaZ','Nova conversa iniciada. /ajuda mostra os comandos disponíveis.');if(connected&&!matrixCore)fetch('/api/v1/chat/reset',{method:'POST',credentials:'same-origin',headers:{'X-SagaZ-Request':'1'}}).catch(()=>{});};
   const sources=[['GitHub','Código, branches e revisão'],['Notion','Estudos e documentação'],['Provedores de IA','BYOK através do gateway'],['VPS / SSH','Operações aprovadas'],['Memória','Contexto e decisões versionadas'],['Arquivos','Análise controlada no servidor']];
   sources.forEach(([name,desc])=>{const tile=document.createElement('article');tile.className='tile';const strong=document.createElement('strong');strong.textContent=name;const p=document.createElement('p');p.textContent=desc;const small=document.createElement('small');small.textContent='Aguardando integração';tile.append(strong,p,small);$('#connectionsGrid').append(tile);});
   const textExtensions=/\.(txt|md|json|js|ts|py|sh|html|css|csv|log)$/i;
@@ -77,6 +86,20 @@
   $('#exportStudy').onclick=()=>{const data={title:$('#studyTitle').value,body:$('#studyBody').value,exportedAt:new Date().toISOString()};const a=document.createElement('a');const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=url;a.download='sagaz-estudo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
   async function checkCore(){
     connected=false;
+    try{
+      const status=await fetch('/api/status',{cache:'no-store',signal:AbortSignal.timeout(2400)});
+      if(status.ok){
+        const body=await status.json();
+        if(body.name==='SagaZ ZeRo'){
+          matrixCore=connected=true;
+          $('#connectionDot').classList.add('online');
+          $('#connectionStatus').textContent='SagaZ Core · sessão local';
+          $('#coreBadge').textContent='CORE: CONECTADO';
+          $('#modelLabel').textContent=body.model_configured?'Provedor configurado':'Preparação local';
+          return;
+        }
+      }
+    }catch{}
     try{
       const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),2400);
       let res;try{res=await fetch(api.status,{cache:'no-store',credentials:'same-origin',signal:controller.signal});}finally{clearTimeout(timer);}
