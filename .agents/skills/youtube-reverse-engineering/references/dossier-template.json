@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "status": "draft",
+  "source": {"url": null, "title": null, "channel": null, "duration_seconds": null, "views": null, "upload_date": null},
+  "evidence": {"transcript": false, "visual": false, "audio": false, "coverage": "unknown", "limitations": []},
+  "verdict": null,
+  "beats": [],
+  "hook": [],
+  "ctas": [],
+  "claims": [],
+  "scorecard": {
+    "hook": {"score": null, "reason": "não avaliado"},
+    "promise": {"score": null, "reason": "não avaliado"},
+    "pace": {"score": null, "reason": "não avaliado"},
+    "retention": {"score": null, "reason": "não avaliado"},
+    "value": {"score": null, "reason": "não avaliado"},
+    "proof": {"score": null, "reason": "não avaliado"},
+    "originality": {"score": null, "reason": "não avaliado"},
+    "cta": {"score": null, "reason": "não avaliado"},
+    "audience": {"score": null, "reason": "não avaliado"},
+    "editorial_potential": {"score": null, "reason": "não avaliado"}
+  },
+  "weaknesses": [],
+  "blueprint": [],
+  "mechanism": null,
+  "variations": [],
+  "pitfalls": [],
+  "comparables": [],
+  "handoff": []
+}

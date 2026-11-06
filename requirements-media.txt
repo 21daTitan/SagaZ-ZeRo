@@ -1,0 +1,7 @@
+# Opcional. O núcleo não requer pip nem chave de API.
+yt-dlp>=2026.10.26,<2027
+opencv-python>=4.10,<6
+Pillow>=10,<13
+scenedetect>=0.6,<0.8
+faster-whisper>=1.1,<2
+edge-tts>=7,<8

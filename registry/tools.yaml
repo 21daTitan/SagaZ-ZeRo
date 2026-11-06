@@ -1,0 +1,7 @@
+tools:
+  - name: sagaz_status
+    access: [local-ui, token-api]
+    kind: read_only
+  - name: sagaz_skills
+    access: [local-ui, token-api]
+    kind: read_only

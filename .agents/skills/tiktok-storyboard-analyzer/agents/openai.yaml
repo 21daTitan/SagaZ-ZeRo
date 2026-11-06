@@ -1,0 +1,14 @@
+interface:
+  display_name: TikTok Storyboard Analyzer
+  short_description: Analisar cenas, imagens-base e falas de vídeos
+  default_prompt: Use $tiktok-storyboard-analyzer para analisar cenas, imagens-base,
+    movimento e falas deste vídeo.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

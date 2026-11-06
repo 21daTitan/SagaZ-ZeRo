@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sagaz-zero"
+version = "3.7.0"
+description = "SagaZ ZeRo / HooLeeSheet — local-first AI creation and research console"
+requires-python = ">=3.10"
+authors = [{name = "dSant / Systemia Solutions"}]
+readme = "README.md"
+dependencies = []
+
+[tool.setuptools]
+packages = ["sagaz"]
+include-package-data = true
+
+[tool.setuptools.package-data]
+sagaz = ["index.html", "static/*.css", "static/*.js"]

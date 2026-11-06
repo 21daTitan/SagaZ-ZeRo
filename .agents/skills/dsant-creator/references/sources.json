@@ -1,0 +1,336 @@
+{
+  "version": 1,
+  "updated_at": "2026-11-04",
+  "playlist": "https://www.youtube.com/playlist?list=PLBPobzL8BYoHZPSfnfrPR02eE5Xb4JeLi",
+  "entries": [
+    {
+      "id": "TydXOf_o46Q",
+      "url": "https://www.youtube.com/watch?v=TydXOf_o46Q",
+      "title": "Digital Marketing from ZERO - The Hidden Game That's Making Ordinary People RICH",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "zT9VvxYVT9c",
+      "url": "https://www.youtube.com/watch?v=zT9VvxYVT9c",
+      "title": "How to MAKE MONEY online even if you're a nobody?",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "hot",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "b-oBghXUAkY",
+      "url": "https://www.youtube.com/watch?v=b-oBghXUAkY",
+      "title": "Nicho Hot: Onde o DINHEIRO corre solto e onde INICIANTE FAZ MUITA GRANA.",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "hot",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "dVbrT8xbrlE",
+      "url": "https://www.youtube.com/watch?v=dVbrT8xbrlE",
+      "title": "What is GREY HAT in Digital Marketing? Where strategy, scale, and money meet.",
+      "tags": [
+        "estrategia",
+        "lifehacks",
+        "analise-critica"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "NXHDaxm36-k",
+      "url": "https://www.youtube.com/watch?v=NXHDaxm36-k",
+      "title": "BLACKHAT sem fantasia - O JOGO, O DINHEIRO e o PREÇO REAL.",
+      "tags": [
+        "estrategia",
+        "lifehacks",
+        "analise-critica"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "cyMJqZHZrp0",
+      "url": "https://www.youtube.com/watch?v=cyMJqZHZrp0",
+      "title": "YOU WILL GO BROKE if you do this...",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "1vDxSy3xov4",
+      "url": "https://www.youtube.com/watch?v=1vDxSy3xov4",
+      "title": "Aprenda a VENDER QUALQUER COISA (venda mais que um demônio negociando almas)",
+      "tags": [
+        "copywriting",
+        "cta",
+        "oferta",
+        "fechamento"
+      ],
+      "scope": "hot",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "hEBmmSCZODg",
+      "url": "https://www.youtube.com/watch?v=hEBmmSCZODg",
+      "title": "(PART 2) How I made R$ 72,481 with a Telegram BOT - TUTORIAL",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "hot",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "YAYRxSe0Oaw",
+      "url": "https://www.youtube.com/watch?v=YAYRxSe0Oaw",
+      "title": "Creative Ideas for Hot Niche Marketing Without Blocking - Step by Step",
+      "tags": [
+        "criativos",
+        "retencao",
+        "hot"
+      ],
+      "scope": "hot",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "043PZrWYi0E",
+      "url": "https://www.youtube.com/watch?v=043PZrWYi0E",
+      "title": "How to warm up your Facebook & Instagram account for paid traffic - Tutorial",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "e0uB866rLp0",
+      "url": "https://www.youtube.com/watch?v=e0uB866rLp0",
+      "title": "How to SCALE $100K/month with MULTIPLE CELL PHONES within a SINGLE COMPUTER - (nobody tells you t...",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "Qn_5KjHjP68",
+      "url": "https://www.youtube.com/watch?v=Qn_5KjHjP68",
+      "title": "Why haven't you made money online yet? (The truth nobody talks about)",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "6_vmjWkv0_M",
+      "url": "https://www.youtube.com/watch?v=6_vmjWkv0_M",
+      "title": "How to PROPERLY Warm Up a Facebook ADS Ad Account - Tutorial",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "5_N_BZzkuLU",
+      "url": "https://www.youtube.com/watch?v=5_N_BZzkuLU",
+      "title": "How to Use One or Multiple VIRTUAL PHONES on Your Computer - Tutorial",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "CdpNKmXDleY",
+      "url": "https://www.youtube.com/watch?v=CdpNKmXDleY",
+      "title": "BANNED FROM INSTAGRAM? DON'T Create Another Account Before Watching This - Tutorial to STRENGTHEN...",
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "sampled",
+      "availability": "metadata_accessible",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "kzabyAFW3r4",
+      "url": "https://www.youtube.com/watch?v=kzabyAFW3r4",
+      "title": null,
+      "tags": [
+        "estrategia"
+      ],
+      "scope": "generic",
+      "evidence": "unavailable",
+      "availability": "unavailable_reported",
+      "source": "dsant-sagaz.zip:manifest.json",
+      "checked_at": "2026-11-04",
+      "verification_method": "yt-dlp flat-playlist metadata; media not downloaded"
+    },
+    {
+      "id": "iOr1mbFK7G8",
+      "url": "https://www.youtube.com/watch?v=iOr1mbFK7G8",
+      "title": null,
+      "tags": [
+        "copywriting",
+        "oferta"
+      ],
+      "scope": "hot",
+      "evidence": "user_summary",
+      "availability": "not_revalidated",
+      "source": "dsant-sagaz.zip:config/sources.yml",
+      "checked_at": null,
+      "user_label": "Venda mais que um golpista — referência do usuário"
+    },
+    {
+      "id": "t9qAIgaguRY",
+      "url": "https://www.youtube.com/watch?v=t9qAIgaguRY",
+      "title": null,
+      "tags": [
+        "operacao",
+        "estrategia"
+      ],
+      "scope": "hot",
+      "evidence": "user_summary",
+      "availability": "not_revalidated",
+      "source": "dsant-sagaz.zip:config/sources.yml",
+      "checked_at": null
+    },
+    {
+      "id": "zGimjuSqH5E",
+      "url": "https://www.youtube.com/watch?v=zGimjuSqH5E",
+      "title": null,
+      "tags": [
+        "voz",
+        "consentimento"
+      ],
+      "scope": "hot",
+      "evidence": "user_summary",
+      "availability": "not_revalidated",
+      "source": "dsant-sagaz.zip:config/sources.yml",
+      "checked_at": null,
+      "user_label": "Clonagem de voz — referência do usuário"
+    },
+    {
+      "id": "NZ596meuUK8",
+      "url": "https://www.youtube.com/watch?v=NZ596meuUK8",
+      "title": "How I Make Viral 2D Animation Videos with Claude Code",
+      "tags": [
+        "storytime",
+        "animacao",
+        "continuidade"
+      ],
+      "scope": "generic",
+      "evidence": "search_metadata_and_uploaded_prompt_pack",
+      "availability": "search_indexed",
+      "source": "Skai Generated / YouTube + DOCX anexado",
+      "checked_at": "2026-11-04"
+    },
+    {
+      "id": "e2Fykz51Nxg",
+      "url": "https://www.youtube.com/watch?v=e2Fykz51Nxg",
+      "title": null,
+      "scope": "generic",
+      "evidence": "unreviewed",
+      "availability": "not_revalidated",
+      "source": "user_link",
+      "checked_at": null,
+      "user_label": "Documentário estilo Netflix — Claude Code",
+      "tags": [
+        "documentario",
+        "edicao"
+      ]
+    },
+    {
+      "id": "AWbpxJPzltc",
+      "url": "https://www.youtube.com/watch?v=AWbpxJPzltc",
+      "title": null,
+      "scope": "generic",
+      "evidence": "unreviewed",
+      "availability": "not_revalidated",
+      "source": "user_link",
+      "checked_at": null,
+      "user_label": "Referência sem título confirmado",
+      "tags": [
+        "referencia"
+      ]
+    }
+  ],
+  "channels": [
+    {
+      "handle": "@blackghost.ai01",
+      "url": "https://www.youtube.com/@blackghost.ai01",
+      "evidence": "user_reference",
+      "availability": "not_revalidated"
+    }
+  ]
+}

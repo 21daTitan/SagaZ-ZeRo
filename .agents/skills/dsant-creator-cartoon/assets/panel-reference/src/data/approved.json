@@ -1,0 +1,1240 @@
+[
+  {
+    "id": "scene-01",
+    "startFrame": 0,
+    "durationInFrames": 120,
+    "voKey": "s1",
+    "narration": "Seu painel apagou. Mas será que precisa de outro?",
+    "camera": {
+      "projection": "perspective",
+      "movement": "dolly-in",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            0,
+            2,
+            8
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 119,
+          "position": [
+            0,
+            1.8,
+            7
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel escuro desce em direção a recipiente de descarte; mão interrompe queda. Close frontal, câmera avança.",
+          "end": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "panel.y",
+        "startFrame": 0,
+        "endFrame": 18,
+        "from": 0.3,
+        "to": 0,
+        "easing": "inOut",
+        "unit": "u3d"
+      },
+      {
+        "type": "interpolate",
+        "target": "hand.x",
+        "startFrame": 0,
+        "endFrame": 12,
+        "from": -2,
+        "to": -0.8,
+        "easing": "inOut",
+        "unit": "u3d"
+      }
+    ],
+    "badges": [
+      {
+        "text": "TROCAR OU REPARAR?",
+        "variant": "warning",
+        "appearAt": 0,
+        "disappearAt": 119
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "Seu painel apagou. Mas será que precisa de outro?",
+        "from": 8,
+        "to": 112
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s1.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  },
+  {
+    "id": "scene-02",
+    "startFrame": 120,
+    "durationInFrames": 180,
+    "voKey": "s2",
+    "narration": "Por fora, parece tudo perdido. Por dentro, ainda falta descobrir o problema.",
+    "camera": {
+      "projection": "perspective",
+      "movement": "dolly-in",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            0,
+            1.8,
+            7
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 179,
+          "position": [
+            1.2,
+            2.2,
+            6.5
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Mesmo painel chega à bancada; tampa se afasta, revelando placa e display em vista explodida. Câmera orbita 12 graus.",
+          "end": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "lid.y",
+        "startFrame": 20,
+        "endFrame": 60,
+        "from": 0,
+        "to": 0.7,
+        "easing": "inOut",
+        "unit": "u3d"
+      },
+      {
+        "type": "interpolate",
+        "target": "panel.explode",
+        "startFrame": 30,
+        "endFrame": 90,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      }
+    ],
+    "badges": [
+      {
+        "text": "OLHE POR DENTRO",
+        "variant": "info",
+        "appearAt": 15,
+        "disappearAt": 179
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "Por fora, parece tudo perdido. Por dentro, ainda falta descobrir o problema.",
+        "from": 8,
+        "to": 172
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s2.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  },
+  {
+    "id": "scene-03",
+    "startFrame": 300,
+    "durationInFrames": 180,
+    "voKey": "s3",
+    "narration": "É por isso que o teste vem antes da troca. Apagar não é diagnóstico.",
+    "camera": {
+      "projection": "perspective",
+      "movement": "orbit",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            1.2,
+            2.2,
+            6.5
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 179,
+          "position": [
+            1.4,
+            2.2,
+            6
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Vista explodida permanece; destaque percorre conector, placa e display, um por vez. Não atribuir causa ao conector.",
+          "end": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "inspection.progress",
+        "startFrame": 15,
+        "endFrame": 155,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      },
+      {
+        "type": "interpolate",
+        "target": "inspection.opacity",
+        "startFrame": 0,
+        "endFrame": 15,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      }
+    ],
+    "badges": [
+      {
+        "text": "TESTAR ANTES DE TROCAR",
+        "variant": "info",
+        "appearAt": 15,
+        "disappearAt": 179
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "É por isso que o teste vem antes da troca. Apagar não é diagnóstico.",
+        "from": 8,
+        "to": 172
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s3.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  },
+  {
+    "id": "scene-04",
+    "startFrame": 480,
+    "durationInFrames": 180,
+    "voKey": "s4",
+    "narration": "O painel mostra velocidade, combustível e alertas. Vale descobrir por que ele parou.",
+    "camera": {
+      "projection": "perspective",
+      "movement": "orbit",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            1.4,
+            2.2,
+            6
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 179,
+          "position": [
+            0,
+            1.8,
+            7
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Painel didático recomposto. Indicadores aparecem individualmente como demonstração funcional, sem sugerir condução.",
+          "end": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "inspection.opacity",
+        "startFrame": 0,
+        "endFrame": 15,
+        "from": 1,
+        "to": 0,
+        "easing": "inOut",
+        "unit": "0-1"
+      },
+      {
+        "type": "interpolate",
+        "target": "panel.explode",
+        "startFrame": 0,
+        "endFrame": 45,
+        "from": 1,
+        "to": 0,
+        "easing": "inOut",
+        "unit": "0-1"
+      },
+      {
+        "type": "interpolate",
+        "target": "lid.y",
+        "startFrame": 0,
+        "endFrame": 45,
+        "from": 0.7,
+        "to": 0,
+        "easing": "inOut",
+        "unit": "u3d"
+      },
+      {
+        "type": "interpolate",
+        "target": "panel.demo",
+        "startFrame": 60,
+        "endFrame": 90,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      }
+    ],
+    "badges": [
+      {
+        "text": "DEMONSTRAÇÃO 3D",
+        "variant": "info",
+        "appearAt": 15,
+        "disappearAt": 179
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "O painel mostra velocidade, combustível e alertas. Vale descobrir por que ele parou.",
+        "from": 8,
+        "to": 172
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s4.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  },
+  {
+    "id": "scene-05",
+    "startFrame": 660,
+    "durationInFrames": 180,
+    "voKey": "s5",
+    "narration": "Se houver reparo viável, recuperar pode ser uma alternativa à substituição.",
+    "camera": {
+      "projection": "perspective",
+      "movement": "dolly-out",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            0,
+            1.8,
+            7
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 179,
+          "position": [
+            0,
+            2,
+            8
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Bifurcação visual discreta: avaliação conduz a reparar OU substituir. Painel permanece central. Sem antes/depois alegado como real.",
+          "end": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "decision.opacity",
+        "startFrame": 15,
+        "endFrame": 45,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      },
+      {
+        "type": "interpolate",
+        "target": "panel.demo",
+        "startFrame": 120,
+        "endFrame": 165,
+        "from": 1,
+        "to": 0,
+        "easing": "inOut",
+        "unit": "0-1"
+      }
+    ],
+    "badges": [
+      {
+        "text": "DIAGNÓSTICO PRIMEIRO",
+        "variant": "info",
+        "appearAt": 15,
+        "disappearAt": 179
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "Se houver reparo viável, recuperar pode ser uma alternativa à substituição.",
+        "from": 8,
+        "to": 172
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s5.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  },
+  {
+    "id": "scene-06",
+    "startFrame": 840,
+    "durationInFrames": 180,
+    "voKey": "s6",
+    "narration": "Na RR Eletrônica Automotiva: carros e motos, em Alcântara, São Gonçalo. Atendimento em todo o Brasil.",
+    "camera": {
+      "projection": "perspective",
+      "movement": "dolly-out",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            0,
+            2,
+            8
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 179,
+          "position": [
+            0,
+            2.3,
+            9
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Câmera recua para bancada; nome RR entra em placa simples. Objeto do início permanece no centro.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "decision.opacity",
+        "startFrame": 0,
+        "endFrame": 20,
+        "from": 1,
+        "to": 0,
+        "easing": "inOut",
+        "unit": "0-1"
+      },
+      {
+        "type": "interpolate",
+        "target": "brand.opacity",
+        "startFrame": 15,
+        "endFrame": 45,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      }
+    ],
+    "badges": [
+      {
+        "text": "RR ELETRÔNICA AUTOMOTIVA",
+        "variant": "info",
+        "appearAt": 15,
+        "disappearAt": 179
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "Na RR Eletrônica Automotiva: carros e motos, em Alcântara, São Gonçalo. Atendimento em todo o Brasil.",
+        "from": 8,
+        "to": 172
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s6.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  },
+  {
+    "id": "scene-07",
+    "startFrame": 1020,
+    "durationInFrames": 180,
+    "voKey": "s7",
+    "narration": "Mande uma foto do painel e conte o defeito pelo WhatsApp.",
+    "camera": {
+      "projection": "perspective",
+      "movement": "dolly-out",
+      "keys": [
+        {
+          "at": 0,
+          "position": [
+            0,
+            2.3,
+            9
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "at": 179,
+          "position": [
+            0,
+            2.3,
+            9.2
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ]
+        }
+      ]
+    },
+    "objects": [
+      {
+        "id": "panel",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "lid",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "bench",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "hand",
+        "type": "3d",
+        "visible": false,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "inspection",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "decision",
+        "type": "2d-overlay",
+        "visible": false,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "brand",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "phone",
+        "type": "3d",
+        "visible": true,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      },
+      {
+        "id": "contact",
+        "type": "2d-overlay",
+        "visible": true,
+        "state": {
+          "start": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim.",
+          "end": "Celular enquadra painel; contato aparece e permanece nos 3 segundos finais. Narração termina antes do fim."
+        }
+      }
+    ],
+    "animations": [
+      {
+        "type": "interpolate",
+        "target": "phone.y",
+        "startFrame": 0,
+        "endFrame": 30,
+        "from": -2,
+        "to": -0.5,
+        "easing": "inOut",
+        "unit": "u3d"
+      },
+      {
+        "type": "interpolate",
+        "target": "contact.opacity",
+        "startFrame": 30,
+        "endFrame": 60,
+        "from": 0,
+        "to": 1,
+        "easing": "inOut",
+        "unit": "0-1"
+      }
+    ],
+    "badges": [
+      {
+        "text": "(21) 96752-9104",
+        "variant": "info",
+        "appearAt": 15,
+        "disappearAt": 179
+      }
+    ],
+    "highlights": [
+      "PAINEL",
+      "DIAGNÓSTICO",
+      "REPARO",
+      "RR"
+    ],
+    "captions": [
+      {
+        "text": "Mande uma foto do painel e conte o defeito pelo WhatsApp.",
+        "from": 8,
+        "to": 100
+      }
+    ],
+    "audioCues": [
+      {
+        "kind": "narration",
+        "src": "vo/s7.mp3",
+        "at": 8,
+        "volume": 1,
+        "status": "planned"
+      }
+    ]
+  }
+]

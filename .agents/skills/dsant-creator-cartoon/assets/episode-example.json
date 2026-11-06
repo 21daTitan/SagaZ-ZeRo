@@ -1,0 +1,240 @@
+{
+  "id": "ep-example-001",
+  "status": "example_not_approved",
+  "canon_version": "proposal-1",
+  "seed": 4201,
+  "desire": "levar água até uma muda seca",
+  "obstacle": "o copo tem um furo",
+  "resolution": "usar o furo para regar lentamente e conquistar cooperação",
+  "video": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "durationInFrames": 1200
+  },
+  "assets": [
+    {
+      "id": "protagonist",
+      "rights_status": "original",
+      "source": "geometria procedural a implementar"
+    },
+    {
+      "id": "neighbor",
+      "rights_status": "original",
+      "source": "geometria procedural a implementar"
+    },
+    {
+      "id": "cup",
+      "rights_status": "original",
+      "source": "geometria procedural a implementar"
+    },
+    {
+      "id": "pipe",
+      "rights_status": "original",
+      "source": "geometria procedural a implementar"
+    },
+    {
+      "id": "plant",
+      "rights_status": "original",
+      "source": "geometria procedural a implementar"
+    },
+    {
+      "id": "stand",
+      "rights_status": "original",
+      "source": "geometria procedural a implementar"
+    }
+  ],
+  "audio": {
+    "reference_status": "metadata_only",
+    "generation_cost": 0,
+    "status": "planned",
+    "voice_required": false,
+    "timing_status": "planned",
+    "bpm": 174,
+    "style": "electronic_dnb_original"
+  },
+  "scenes": [
+    {
+      "id": "s1",
+      "startFrame": 0,
+      "endFrame": 90,
+      "action": "Uma gota cai ao lado de uma muda seca; ele olha a muda e pega o copo.",
+      "camera": "close gota, abre para mão e muda",
+      "emotion": "preocupação",
+      "narration": "",
+      "state_in": {
+        "cup": "na bancada",
+        "water": "pingando no chão",
+        "hero": "observando"
+      },
+      "state_out": {
+        "cup": "na mão direita",
+        "water": "pingando no chão",
+        "hero": "confiante"
+      },
+      "audio_cues": [
+        {
+          "kind": "click",
+          "frame": 40,
+          "endFrame": 55
+        }
+      ]
+    },
+    {
+      "id": "s2",
+      "startFrame": 90,
+      "endFrame": 300,
+      "action": "Ele põe o copo sob o cano e sorri; a água escapa por um furo.",
+      "camera": "plano médio mantém cano e copo no quadro",
+      "emotion": "falsa vitória",
+      "narration": "",
+      "state_in": {
+        "cup": "na mão direita",
+        "water": "pingando no chão",
+        "hero": "confiante"
+      },
+      "state_out": {
+        "cup": "sob o cano",
+        "water": "vazando pelo furo do copo",
+        "hero": "frustrado"
+      },
+      "audio_cues": [
+        {
+          "kind": "click",
+          "frame": 210,
+          "endFrame": 225
+        }
+      ]
+    },
+    {
+      "id": "s3",
+      "startFrame": 300,
+      "endFrame": 480,
+      "action": "Tenta tampar o furo com o dedo; molha a própria manga; retira o copo.",
+      "camera": "detalhe mão, corte para reação",
+      "emotion": "frustração",
+      "narration": "",
+      "state_in": {
+        "cup": "sob o cano",
+        "water": "vazando pelo furo do copo",
+        "hero": "frustrado"
+      },
+      "state_out": {
+        "cup": "na mão direita",
+        "water": "pingando no chão",
+        "hero": "pensando"
+      },
+      "audio_cues": [
+        {
+          "kind": "impact",
+          "frame": 390,
+          "endFrame": 405
+        }
+      ]
+    },
+    {
+      "id": "s4",
+      "startFrame": 480,
+      "endFrame": 690,
+      "action": "Segue uma gota com os olhos e põe o copo entre cano e muda; a gota chega à terra.",
+      "camera": "raccord do olhar, tilt curto acompanha gota",
+      "emotion": "descoberta",
+      "narration": "",
+      "state_in": {
+        "cup": "na mão direita",
+        "water": "pingando no chão",
+        "hero": "pensando"
+      },
+      "state_out": {
+        "cup": "sob o cano",
+        "water": "molhando a muda através do copo",
+        "hero": "surpreso"
+      },
+      "audio_cues": [
+        {
+          "kind": "idea",
+          "frame": 600,
+          "endFrame": 615
+        }
+      ]
+    },
+    {
+      "id": "s5",
+      "startFrame": 690,
+      "endFrame": 900,
+      "action": "Prende o copo num suporte existente e afasta a mão; a rega continua.",
+      "camera": "plano próximo estável mostra encaixe e soltura",
+      "emotion": "alívio",
+      "narration": "",
+      "state_in": {
+        "cup": "sob o cano",
+        "water": "molhando a muda através do copo",
+        "hero": "surpreso"
+      },
+      "state_out": {
+        "cup": "preso acima da muda",
+        "water": "rega lenta",
+        "hero": "aliviado"
+      },
+      "audio_cues": [
+        {
+          "kind": "click",
+          "frame": 800,
+          "endFrame": 815
+        }
+      ]
+    },
+    {
+      "id": "s6",
+      "startFrame": 900,
+      "endFrame": 1080,
+      "action": "Vizinho vê a muda recebendo água; protagonista aponta outro vaso seco e oferece ajuda.",
+      "camera": "abre para os dois, sem cruzar eixo",
+      "emotion": "confiança",
+      "narration": "",
+      "state_in": {
+        "cup": "preso acima da muda",
+        "water": "rega lenta",
+        "hero": "aliviado"
+      },
+      "state_out": {
+        "cup": "preso acima da muda",
+        "water": "rega lenta",
+        "hero": "oferecendo ajuda"
+      },
+      "audio_cues": [
+        {
+          "kind": "silence",
+          "frame": 980,
+          "endFrame": 995
+        }
+      ]
+    },
+    {
+      "id": "s7",
+      "startFrame": 1080,
+      "endFrame": 1200,
+      "action": "Vizinho entrega um segundo copo furado; ele olha o copo, olha a câmera e sorri.",
+      "camera": "close reação; terminar com imagem, sem cauda preta",
+      "emotion": "humor",
+      "narration": "",
+      "state_in": {
+        "cup": "preso acima da muda",
+        "water": "rega lenta",
+        "hero": "oferecendo ajuda"
+      },
+      "state_out": {
+        "cup": "preso acima da muda",
+        "water": "rega lenta",
+        "hero": "sorrindo com um novo copo furado"
+      },
+      "audio_cues": [
+        {
+          "kind": "click",
+          "frame": 1150,
+          "endFrame": 1165
+        }
+      ]
+    }
+  ]
+}

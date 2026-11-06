@@ -1,0 +1,21 @@
+interface:
+  display_name: remotion problem resolve video
+  short_description: Planeja e produz, de ponta a ponta, vídeos educativos verticais
+    (Shorts/Reels/TikTok, 1080×1920) em 3D low-poly com Remotion + React Three Fiber,
+    no formato problema → solução — roteiro com tabela cronológica e contrato de dados,
+    aprovação do usuário, depois implementação, narração TTS sincronizada palavra
+    a palavra, badges, legendas, trilha e efeitos sintetizados, revisão por frames
+    e MP4 final renderizado. Use sempre que o usuário pedir um vídeo explicativo,
+    didático ou "como funciona" sobre qualquer mecanismo, processo ou sistema (ex.
+    "como funciona um poço artesiano", "vídeo de 60 s sobre freio ABS"), um short
+    animado em 3D, um prompt mestre/roteiro de vídeo para Remotion, ou colar um briefing/storyboard
+    com timestamps e frames — mesmo que não cite Remotion nem 3D.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

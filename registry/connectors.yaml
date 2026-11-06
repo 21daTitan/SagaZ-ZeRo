@@ -1,0 +1,8 @@
+# Metadata: support levels must be verified at runtime.
+connectors:
+  - id: local-ui
+    access: cookie-session
+    tools: [sagaz_status, sagaz_skills]
+  - id: token-api
+    access: bearer-from-SAGAZ_API_TOKEN
+    tools: [sagaz_status, sagaz_skills]

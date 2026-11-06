@@ -1,0 +1,70 @@
+"""SagaZ CLI: local operation and explicit read-only diagnostics."""
+import argparse
+import json
+import os
+from pathlib import Path
+
+from sagaz.app import cli as interactive_cli, serve
+from sagaz.attribution import credits
+from sagaz.catalog import connection
+from sagaz.gateway.service import Gateway
+from sagaz.pix import static_brcode
+from sagaz.compat.upstream import compare_directories
+from sagaz.compat.report import markdown
+from guard.status import status as guard_status
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description='HooLeeSheet · SagaZ ZeRo v3.7.0')
+    parser.add_argument('--web', action='store_true', help='Legacy: launch local Web UI')
+    parser.add_argument('--port', type=int, default=8080)
+    parser.add_argument('--use-model', action='store_true')
+    sub = parser.add_subparsers(dest='command')
+    sub.add_parser('doctor')
+    sub.add_parser('credits')
+    sub.add_parser('connect')
+    sub.add_parser('guard')
+    serve_p = sub.add_parser('serve')
+    serve_p.add_argument('--port', type=int, default=8080)
+    pix = sub.add_parser('pix')
+    pix.add_argument('--amount', type=str, default=None)
+    compat = sub.add_parser('compat')
+    compat.add_argument('upstream', type=Path)
+    compat.add_argument('--local', type=Path, default=ROOT)
+    gateway = sub.add_parser('gateway')
+    gateway.add_argument('operation', choices=('cost', 'audit-verify', 'audit-checkpoint', 'capability', 'models'))
+    args = parser.parse_args(argv)
+    if args.web or args.command=='serve':
+        serve(args.port)
+    elif args.command is None:
+        interactive_cli(args.use_model)
+    elif args.command=='doctor':
+        from sagaz.services import CORE
+        print(json.dumps(CORE.doctor(), ensure_ascii=False, indent=2))
+    elif args.command=='credits':
+        print(json.dumps(credits(), ensure_ascii=False, indent=2))
+    elif args.command=='connect':
+        print(json.dumps(connection(), ensure_ascii=False, indent=2))
+    elif args.command=='guard':
+        print(json.dumps(guard_status(), ensure_ascii=False, indent=2))
+    elif args.command=='pix':
+        print(static_brcode(amount=args.amount))
+    elif args.command=='compat':
+        print(markdown(compare_directories(args.upstream, args.local)))
+    elif args.command=='gateway':
+        worker = Gateway(ROOT/'projects/sagaz')
+        if args.operation=='cost':
+            data=worker.cost.report()
+        elif args.operation=='audit-verify':
+            data=worker.audit.verify()
+        elif args.operation=='audit-checkpoint':
+            data=worker.audit.checkpoint()
+        elif args.operation=='models':
+            data=worker.models()
+        else:
+            from sagaz.gateway.policy import LOCAL_UI
+            data=worker.capability(LOCAL_UI)
+        print(json.dumps(data, ensure_ascii=False, indent=2))
+    return 0
