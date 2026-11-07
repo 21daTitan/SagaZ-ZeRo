@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 import uuid
+from sagaz.discord_memory import DiscordMemory, load_json
+from sagaz.god import public_dict, resolve
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -67,11 +69,22 @@ def operator_command(brief, *, use_model=False, state_root=None, parent_id=None)
     command = command.casefold()
     query = arguments[0] if arguments else ''
     if command in ('/ajuda', '/help'):
-        return {'answer': '/cti [termo] · /skills · /status · /modelos · /criar <briefing> · /limpar', 'mode': 'command'}
+        return {'answer': '/cti [termo] · /skills · /status · /god · /discord [stats|search <termo>] · /modelos · /criar <briefing> · /limpar', 'mode': 'command'}
     if command == '/shell':
         return {'answer': 'Abra o terminal da VPS por SSH e use sagaz shell.', 'mode': 'command'}
-    if command.startswith('/') and command not in ('/cti', '/skills', '/status', '/modelos', '/criar'):
+    if command.startswith('/') and command not in ('/cti', '/skills', '/status', '/god', '/discord', '/modelos', '/criar'):
         raise ValueError('Comando desconhecido. Use /ajuda.')
+    if command == '/god':
+        return {'answer': json.dumps(public_dict(resolve(query or None)), ensure_ascii=False, indent=2), 'mode': 'command'}
+    if command == '/discord':
+        memory = DiscordMemory((Path(state_root) if state_root else ROOT / 'projects/sagaz') / 'discord_memory.sqlite3')
+        if not query or query.casefold() == 'stats':
+            data = memory.summary()
+        elif query.casefold().startswith('search '):
+            data = memory.search(query[7:])
+        else:
+            data = memory.search(query)
+        return {'answer': json.dumps(data, ensure_ascii=False, indent=2), 'mode': 'command'}
     if command in ('/cti', '/skills', '/status', '/modelos'):
         from sagaz.catalog import skills, connection
         from sagaz.cti import search, summary

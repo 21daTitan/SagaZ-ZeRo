@@ -123,6 +123,7 @@
           $('#connectionStatus').textContent='SagaZ Core · sessão local';
           $('#coreBadge').textContent='CORE: CONECTADO';
           $('#modelLabel').textContent=body.model_configured?'Provedor configurado':'Preparação local';
+          updateGod(body.god_mode);
           return;
         }
       }
@@ -149,6 +150,20 @@
       $('#coreBadge').textContent='CORE: INDISPONÍVEL';
     }
   }
+  function updateGod(profile){
+    if(!profile||!$('#godToggle'))return;
+    $('#godToggle').textContent=`☩ PERFIL: ${(profile.name||'devocional').toUpperCase()}`;
+    $('#godToggle').dataset.level=profile.name||'devocional';
+  }
+  $('#godToggle').onclick=async()=>{
+    const next=$('#godToggle').dataset.level==='deus'?'devocional':'deus';
+    try{
+      const response=await fetch('/api/god/toggle',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({level:next})});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+      updateGod(data);bubble('SagaZ',`Perfil da sessão alterado para ${data.name}. Confirmação continua obrigatória para ações destrutivas.`);
+    }catch(error){bubble('SagaZ',`Não foi possível alterar o perfil (${error.message}).`);}
+  };
   $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();$('#loginError').textContent='';
     const password=$('#loginPassword').value;

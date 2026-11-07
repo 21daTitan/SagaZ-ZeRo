@@ -24,8 +24,10 @@ class Scope:
 
 
 PUBLIC = Scope("public", frozenset())
-LOCAL_UI = Scope("local-ui", frozenset({"sagaz_status", "sagaz_skills", "sagaz_cti_search", "sagaz_cti_summary"}))
-TOKEN_API = Scope("token-api", frozenset({"sagaz_status", "sagaz_skills", "sagaz_cti_search", "sagaz_cti_summary"}))
+READ_TOOLS = frozenset({"sagaz_status", "sagaz_skills", "sagaz_cti_search", "sagaz_cti_summary",
+                        "sagaz_discord_summary", "sagaz_discord_search"})
+LOCAL_UI = Scope("local-ui", READ_TOOLS)
+TOKEN_API = Scope("token-api", READ_TOOLS)
 
 
 class RateLimiter:

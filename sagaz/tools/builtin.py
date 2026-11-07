@@ -8,4 +8,6 @@ BUILTINS = {
     'sagaz_skills': skills,
     'sagaz_cti_summary': cti_summary,
     'sagaz_cti_search': cti_search,
+    'sagaz_discord_summary': lambda: {},
+    'sagaz_discord_search': lambda query, limit=20: {},
 }
