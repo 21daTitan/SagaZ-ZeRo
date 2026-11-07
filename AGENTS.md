@@ -15,4 +15,4 @@ Use HooLeeSh33t Matrix como interface principal web e mobile, na raiz do Core. N
 
 Exponha dSant-CreaTor como uma única entrada criativa, `/criar <briefing>` ou `python -m sagaz criar "<briefing>"`. O agente escolhe o procedimento por intenção e usa os módulos criativos como recursos internos. Para copy, CTA ou roteiro, priorize gancho, prova disponível, uma ação principal e um critério de avaliação. Sem modelo autorizado e configurado, entregue a preparação local com indicação explícita do estado.
 
-Acesso administrativo ao sistema e ao GitHub usa a identidade do operador por SSH e Git autenticado. A sessão web utiliza os escopos do Core e os comandos de agente. Preserve atribuição, estado local e histórico.
+O operador abre o shell da conta atual com `sagaz shell` ou `/shell` em um terminal interativo. Para a VPS, use SSH. Para o GitHub, use Git autenticado. A sessão web utiliza os escopos do Core e os comandos de agente. Preserve atribuição, estado local e histórico.

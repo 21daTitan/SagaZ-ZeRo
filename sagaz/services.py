@@ -63,7 +63,15 @@ def operator_command(brief, *, use_model=False, state_root=None, parent_id=None)
     """Shared Matrix entry point for browser and terminal."""
     if not isinstance(brief, str) or not brief.strip():
         raise ValueError('Informe um comando ou briefing.')
-    command, _, query = brief.strip().partition(' ')
+    command, *arguments = brief.strip().split(maxsplit=1)
+    command = command.casefold()
+    query = arguments[0] if arguments else ''
+    if command in ('/ajuda', '/help'):
+        return {'answer': '/cti [termo] · /skills · /status · /modelos · /criar <briefing> · /limpar', 'mode': 'command'}
+    if command == '/shell':
+        return {'answer': 'Abra o terminal da VPS por SSH e use sagaz shell.', 'mode': 'command'}
+    if command.startswith('/') and command not in ('/cti', '/skills', '/status', '/modelos', '/criar'):
+        raise ValueError('Comando desconhecido. Use /ajuda.')
     if command in ('/cti', '/skills', '/status', '/modelos'):
         from sagaz.catalog import skills, connection
         from sagaz.cti import search, summary

@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import secrets
 import sys
+import subprocess
 import threading
 from urllib.parse import urlparse, parse_qs
 import uuid
@@ -197,16 +198,34 @@ def serve(port=8080,state_root=None,host=None):
         except KeyboardInterrupt:pass
 
 
+def operator_shell():
+    if not sys.stdin.isatty() or not sys.stdout.isatty():
+        raise ValueError('Abra um terminal interativo para usar o shell.')
+    executable = os.environ.get('COMSPEC', 'cmd.exe') if os.name == 'nt' else os.environ.get('SHELL', '/bin/sh')
+    return subprocess.call([executable])
+
+
 def cli(use_model=False):
     blue='\033[38;5;39m' if sys.stdout.isatty() else ''
     reset='\033[0m' if blue else ''
-    print(blue+'HooLeeSh33t Matrix · /cti · /skills · /status · /criar <briefing> · sair'+reset)
+    print(blue+'HooLeeSh33t Matrix · /ajuda · /shell · sair'+reset)
+    parent_id = None
     while True:
         try:brief=input(blue+'SagaZ > '+reset).strip()
         except (EOFError,KeyboardInterrupt):break
         if brief.casefold() in ('sair','exit','quit'):break
         if not brief:continue
-        try:print(operator_command(brief,use_model=use_model)['answer'])
+        try:
+            if brief.casefold() == '/shell':
+                operator_shell()
+                continue
+            if brief.casefold() == '/limpar':
+                parent_id = None
+                print('Nova conversa.')
+                continue
+            result = operator_command(brief, use_model=use_model, parent_id=parent_id)
+            parent_id = result.get('id', parent_id)
+            print(result['answer'])
         except (ValueError,OSError) as exc:print('Erro:',exc)
 
 if __name__=='__main__':

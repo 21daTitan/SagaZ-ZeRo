@@ -4,7 +4,7 @@ import json
 import os
 from pathlib import Path
 
-from sagaz.app import cli as interactive_cli, serve
+from sagaz.app import cli as interactive_cli, operator_shell, serve
 from sagaz.attribution import credits
 from sagaz.catalog import connection
 from sagaz.gateway.service import Gateway
@@ -26,6 +26,7 @@ def main(argv=None):
     create = sub.add_parser('criar', help='Acionar a skill dSant-CreaTor')
     create.add_argument('briefing')
     create.add_argument('--use-model', action='store_true', default=argparse.SUPPRESS)
+    sub.add_parser('shell', help='Abrir shell interativo com as permissões da conta atual')
     sub.add_parser('doctor')
     sub.add_parser('credits')
     sub.add_parser('connect')
@@ -47,6 +48,11 @@ def main(argv=None):
     elif args.command == 'criar':
         try:
             print(operator_command('/criar ' + args.briefing, use_model=args.use_model)['answer'])
+        except (ValueError, OSError) as exc:
+            parser.exit(1, f'Erro: {exc}\n')
+    elif args.command == 'shell':
+        try:
+            return operator_shell()
         except (ValueError, OSError) as exc:
             parser.exit(1, f'Erro: {exc}\n')
     elif args.command=='doctor':
