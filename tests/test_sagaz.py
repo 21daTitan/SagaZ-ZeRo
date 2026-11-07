@@ -23,6 +23,26 @@ class SagaZTests(unittest.TestCase):
     def login(self):
         status,h,b=self.request('GET','/');self.assertEqual(status,200)
         self.assertIn(b'SAGAZ',b);self.cookie=h['Set-Cookie'].split(';')[0]
+    def test_matrix_default_and_shared_commands(self):
+        status, _, page = self.request('GET', '/')
+        self.assertEqual(status, 200)
+        self.assertIn(b'HooLeeSh33t', page)
+        self.assertIn(b'/apps/hooleesh33t-matrix-v1/app.js', page)
+        path = '/api/matrix/chat'
+        body = json.dumps({'brief': '/cti QakBot'})
+        self.assertEqual(self.request('POST', path, body)[0], 403)
+        self.login()
+        headers = {'Cookie': self.cookie, 'Content-Type': 'application/json'}
+        status, _, response = self.request('POST', path, body, headers)
+        self.assertEqual(status, 200)
+        self.assertIn('QakBot', json.loads(response)['answer'])
+        with patch.dict(m.os.environ, {'SAGAZ_MATRIX_USE_MODEL': '0'}):
+            status, _, response = self.request('POST', path, json.dumps(
+                {'brief': '/criar roteiro com gancho para anúncio'}), headers)
+        self.assertEqual(status, 200)
+        self.assertEqual(json.loads(response)['mode'], 'local_preparation')
+        self.assertEqual(json.loads(response)['task'], 'video')
+
     def test_local_chat_exports_real_context_without_model(self):
         self.login()
         headers={'Cookie':self.cookie,'Content-Type':'application/json','Origin':'http://'+self.host}
@@ -71,7 +91,7 @@ class SagaZTests(unittest.TestCase):
             self.assertEqual(status,200);self.assertIn(kind,headers['Content-Type'])
             self.assertIn("script-src 'self';",headers['Content-Security-Policy'])
         status,_,body=self.request('GET','/api/skills');self.assertEqual(status,200)
-        data=json.loads(body);self.assertEqual(data['count'],6)
+        data=json.loads(body);self.assertEqual(data['count'],7)
         self.assertTrue(all(len(item['description'])>20 for item in data['entries']))
         with patch.dict(m.os.environ,{'DSANT_API_KEY':'secret-test-value','DSANT_BASE_URL':'https://example.invalid/v1','DSANT_MODEL':'my-model'}):
             self.login()

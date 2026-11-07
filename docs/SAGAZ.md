@@ -48,3 +48,20 @@ Projetos permite retomar conversas criadas nesta versão. Cada envio cria uma ve
 Consulte `CASSANDRA-REVERSE-EA.md` para evidências da main de referência e o que não foi implementado.
 
 A barra de comandos da interface está documentada em DESIGN.md. Use /help; nenhum comando do sistema é executado.
+
+## HooLeeSh33t Matrix
+
+`python -m sagaz serve --port 18765` abre a Matrix na raiz. O mesmo
+layout atende navegador desktop e mobile. O console `python -m sagaz` usa
+os comandos Matrix em texto. A interface anterior está em `/legacy`.
+
+- `/cti [termo]` consulta a coleção local de inteligência de ameaças.
+- `/criar <briefing>` encaminha copy, CTA, roteiro ou estratégia ao dSant-CreaTor.
+- `python -m sagaz criar "<briefing>" --use-model` gera texto com o provedor configurado.
+- Para geração no navegador, defina `SAGAZ_MATRIX_USE_MODEL=1` no ambiente
+  do Core e configure `DSANT_BASE_URL` e `DSANT_MODEL`, além da chave quando exigida.
+  Por padrão, o Core prepara o briefing localmente. O provedor pode cobrar por geração.
+
+Para administração da VPS, use SSH com a sua conta de operador. Para o
+GitHub, use as credenciais do Git local. A interface Matrix usa a sessão
+local e os escopos existentes do SagaZ.

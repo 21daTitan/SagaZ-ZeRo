@@ -9,6 +9,7 @@ from sagaz.attribution import credits
 from sagaz.catalog import connection
 from sagaz.gateway.service import Gateway
 from sagaz.pix import static_brcode
+from sagaz.services import operator_command
 from sagaz.compat.upstream import compare_directories
 from sagaz.compat.report import markdown
 from guard.status import status as guard_status
@@ -22,6 +23,9 @@ def main(argv=None):
     parser.add_argument('--port', type=int, default=8080)
     parser.add_argument('--use-model', action='store_true')
     sub = parser.add_subparsers(dest='command')
+    create = sub.add_parser('criar', help='Acionar a skill dSant-CreaTor')
+    create.add_argument('briefing')
+    create.add_argument('--use-model', action='store_true', default=argparse.SUPPRESS)
     sub.add_parser('doctor')
     sub.add_parser('credits')
     sub.add_parser('connect')
@@ -40,6 +44,11 @@ def main(argv=None):
         serve(args.port)
     elif args.command is None:
         interactive_cli(args.use_model)
+    elif args.command == 'criar':
+        try:
+            print(operator_command('/criar ' + args.briefing, use_model=args.use_model)['answer'])
+        except (ValueError, OSError) as exc:
+            parser.exit(1, f'Erro: {exc}\n')
     elif args.command=='doctor':
         from sagaz.services import CORE
         print(json.dumps(CORE.doctor(), ensure_ascii=False, indent=2))

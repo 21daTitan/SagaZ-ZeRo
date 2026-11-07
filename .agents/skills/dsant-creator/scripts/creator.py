@@ -101,7 +101,7 @@ def choose_task(brief):
     t = brief.casefold()
     if any(x in t for x in ('analise o vídeo', 'analise esse vídeo', 'referência', 'youtube.com', 'youtu.be', 'tiktok.com')):
         return 'reference'
-    if any(x in t for x in ('vídeo', 'video', 'mp4', 'animar', 'render')):
+    if any(x in t for x in ('vídeo', 'video', 'roteiro', 'mp4', 'animar', 'render')):
         return 'video'
     if any(x in t for x in ('estratégia', 'funil', 'lifehack', 'hackinglife')):
         return 'strategy'

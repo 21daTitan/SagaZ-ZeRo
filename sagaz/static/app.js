@@ -154,10 +154,15 @@ $('#commandbar').addEventListener('submit', event => {
   const text = $('#command').value.trim(); if (!text) return;
   const commands = {'/skills':'skills','/projects':'projects','/research':'research','/connect':'settings','/console':'console'};
   if (text === '/help' || text === '/modules') {
-    message('assistant', '/help · mapa de comandos\n/skills · catálogo de skills\n/research · referências e YouTube\n/projects · conversas e contextos\n/connect · configuração do modelo\n/new · nova conversa\n/clear · limpar somente a tela\n/status · estado do servidor\n\nUm texto sem / prepara um briefing. Comandos shell não são executados.');
+    message('assistant', '/help · mapa de comandos\n/skills · catálogo de skills\n/cti <termo> · consulta CTI offline\n/research · referências e YouTube\n/projects · conversas e contextos\n/connect · configuração do modelo\n/new · nova conversa\n/clear · limpar somente a tela\n/status · estado do servidor\n\nUm texto sem / prepara um briefing. Comandos shell não são executados.');
   } else if (commands[text]) view(commands[text]);
   else if (text === '/new') $('#newtask').click();
   else if (text === '/clear') { $('#conversation').replaceChildren(); $('#chatstatus').textContent = 'Tela limpa. Histórico e conversa ativa preservados.'; }
+  else if (text.startsWith('/cti ')) {
+    const q = text.slice(5).trim();
+    api('/api/cti/search?q='+encodeURIComponent(q)).then(d=>message('assistant',JSON.stringify(d,null,2))).catch(e=>message('assistant',e.message));
+  }
+  else if (text === '/cti') api('/api/cti/summary').then(d=>message('assistant',JSON.stringify(d,null,2))).catch(e=>message('assistant',e.message));
   else if (text === '/status') api('/api/status').then(d=>message('assistant',JSON.stringify(d,null,2))).catch(e=>message('assistant',e.message));
   else if (text.startsWith('/')) message('assistant','Comando desconhecido. Use /help.');
   else { $('#brief').value = text; $('#chat').requestSubmit(); }

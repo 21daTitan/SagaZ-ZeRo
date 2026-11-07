@@ -59,6 +59,24 @@ def prepare_task(brief,niche='general',method='cinematic-3d',use_model=False,sta
     return dict(id=directory.name,answer=answer,mode=mode,task=cfg['task'],procedure=cfg['procedure'],sources=len(cfg['sources']),studies=cfg.get('studies',[]),status='text_generated' if use_model else 'prepared')
 
 
+def operator_command(brief, *, use_model=False, state_root=None, parent_id=None):
+    """Shared Matrix entry point for browser and terminal."""
+    if not isinstance(brief, str) or not brief.strip():
+        raise ValueError('Informe um comando ou briefing.')
+    command, _, query = brief.strip().partition(' ')
+    if command in ('/cti', '/skills', '/status', '/modelos'):
+        from sagaz.catalog import skills, connection
+        from sagaz.cti import search, summary
+        if command == '/cti':
+            data = search(query) if query.strip() else summary()
+        else:
+            data = skills() if command == '/skills' else connection()
+        return {'answer': json.dumps(data, ensure_ascii=False, indent=2), 'mode': 'command'}
+    if command == '/criar':
+        brief = query
+    return prepare_task(brief, use_model=use_model, state_root=state_root, parent_id=parent_id)
+
+
 def research(url,state_root=None):
     reverse=load('sagaz_reverse',ROOT/'.agents/skills/youtube-reverse-engineering/scripts/reverse.py')
     url=reverse.canonical(url)
