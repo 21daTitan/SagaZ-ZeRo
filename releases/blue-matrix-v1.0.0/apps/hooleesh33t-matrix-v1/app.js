@@ -34,6 +34,17 @@
     if(cmd==='/limpar'){ parentId=null;$('#chatFeed').replaceChildren();return 'Conversa local limpa.'; }
     return null;
   }
+  async function askCore(input){
+      const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),190000);
+      let response;
+      try { response=await fetch(matrixCore ? '/api/matrix/chat' : api.chat,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-SagaZ-Request':'1'},body:JSON.stringify(matrixCore ? {brief:input,parent_id:parentId} : {message:input}),signal:controller.signal}); }
+      finally{clearTimeout(timeout);}
+      const data=await response.json();
+      if(!response.ok)throw new Error(typeof data.error==='string' ? data.error : `HTTP ${response.status}`);
+      const answer=matrixCore ? data.answer : data.reply;
+      if(typeof answer!=='string')throw Error('Resposta inválida do backend');
+      return {answer, id:data.id};
+  }
   async function send(){
     if(sending)return;
     const input=$('#prompt').value.trim();if(!input && !attachments.length)return;
@@ -45,15 +56,8 @@
     if(attachments.length){bubble('SagaZ','Anexos exigem o endpoint seguro de uploads /api/v1/files, que não está habilitado nesta prévia. Nenhum arquivo foi enviado.');return;}
     sending=true;
     try{
-      const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),30000);
-      let response;
-      try { response=await fetch(matrixCore ? '/api/matrix/chat' : api.chat,{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-SagaZ-Request':'1'},body:JSON.stringify(matrixCore ? {brief:input,parent_id:parentId} : {message:input}),signal:controller.signal}); }
-      finally{clearTimeout(timeout);}
-      const data=await response.json();
-      if(!response.ok)throw new Error(typeof data.error==='string' ? data.error : `HTTP ${response.status}`);
-      const answer=matrixCore ? data.answer : data.reply;
-      if(typeof answer!=='string')throw Error('Resposta inválida do backend');
-      if(data.id)parentId=data.id;
+      const {answer, id} = await askCore(input);
+      if(id)parentId=id;
       bubble('SagaZ',answer);
     }catch(e){bubble('SagaZ',`Falha ao consultar o Core (${e.message}). Confira os logs do servidor.`);}finally{sending=false;}
   }
@@ -80,7 +84,30 @@
     try{const content=await file.text();$('#filePreview').textContent=content.slice(0,10000)+(content.length>10000?'\n… [prévia limitada]':'');}catch{$('#filePreview').textContent='Não foi possível ler o arquivo.';}
   }
   $('#fileInput').onchange=e=>{for(const f of e.target.files){if(attachments.length>=12)break;attachments.push(f);}renderAttachments();e.target.value='';};
-  $('#commandPreview').onclick=()=>{const cmd=$('#commandInput').value.trim();if(!cmd)return;$('#terminalLog').textContent+=`\n$ ${cmd}\n[PREVIEW] Não executado. O Core precisa validar sessão, permissões e aprovação.`;$('#commandInput').value='';};
+  $('#commandPreview').onclick=async()=>{
+    const cmd=$('#commandInput').value.trim();
+    if(!cmd || sending)return;
+    $('#commandInput').value='';
+    const log=$('#terminalLog');
+    log.textContent+=`\n> ${cmd}`;
+    if(!matrixCore || !connected){
+      log.textContent+='\nConecte a Matrix ao Core para executar comandos SagaZ.';
+      return;
+    }
+    if(!cmd.startsWith('/')){
+      log.textContent+='\nUse /ajuda para ver os comandos SagaZ. Para comandos de sistema, use SSH.';
+      return;
+    }
+    sending=true;
+    try{
+      const local=localCommand(cmd);
+      if(local){log.textContent+='\n'+local;return;}
+      const {answer,id}=await askCore(cmd);
+      if(id)parentId=id;
+      log.textContent+='\n'+answer;
+    }catch(error){log.textContent+='\n'+error.message;}
+    finally{sending=false;}
+  };
   try{const s=JSON.parse(localStorage.getItem('sagaz.study.v1')||'null');if(s){$('#studyTitle').value=s.title||'';$('#studyBody').value=s.body||'';}}catch{}
   $('#saveStudy').onclick=()=>{const s={title:$('#studyTitle').value,body:$('#studyBody').value,updatedAt:new Date().toISOString(),scope:'local-browser'};try{localStorage.setItem('sagaz.study.v1',JSON.stringify(s));$('#studyStatus').textContent='Salvo apenas neste navegador. Exporte para compartilhar.';}catch{$('#studyStatus').textContent='O navegador bloqueou o armazenamento local.';}};
   $('#exportStudy').onclick=()=>{const data={title:$('#studyTitle').value,body:$('#studyBody').value,exportedAt:new Date().toISOString()};const a=document.createElement('a');const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.href=url;a.download='sagaz-estudo.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
@@ -96,6 +123,7 @@
           $('#connectionStatus').textContent='SagaZ Core · sessão local';
           $('#coreBadge').textContent='CORE: CONECTADO';
           $('#modelLabel').textContent=body.model_configured?'Provedor configurado':'Preparação local';
+          updateGod(body.god_mode);
           return;
         }
       }
@@ -122,6 +150,20 @@
       $('#coreBadge').textContent='CORE: INDISPONÍVEL';
     }
   }
+  function updateGod(profile){
+    if(!profile||!$('#godToggle'))return;
+    $('#godToggle').textContent=`☩ PERFIL: ${(profile.name||'devocional').toUpperCase()}`;
+    $('#godToggle').dataset.level=profile.name||'devocional';
+  }
+  $('#godToggle').onclick=async()=>{
+    const next=$('#godToggle').dataset.level==='deus'?'devocional':'deus';
+    try{
+      const response=await fetch('/api/god/toggle',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({level:next})});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+      updateGod(data);bubble('SagaZ',`Perfil da sessão alterado para ${data.name}. Confirmação continua obrigatória para ações destrutivas.`);
+    }catch(error){bubble('SagaZ',`Não foi possível alterar o perfil (${error.message}).`);}
+  };
   $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();$('#loginError').textContent='';
     const password=$('#loginPassword').value;

@@ -16,13 +16,20 @@ TOOLS = [
          "query": {"type": "string", "minLength": 1, "maxLength": 120},
          "limit": {"type": "integer", "minimum": 1, "maximum": 20}},
          "required": ["query"], "additionalProperties": False}},
+    {"name": "sagaz_discord_summary", "description": "Read-only summary of consented local Discord memory",
+     "inputSchema": {"type": "object", "properties": {}, "additionalProperties": False}},
+    {"name": "sagaz_discord_search", "description": "Search consented local Discord memory",
+     "inputSchema": {"type": "object", "properties": {
+         "query": {"type": "string", "minLength": 1, "maxLength": 200},
+         "limit": {"type": "integer", "minimum": 1, "maximum": 100}},
+         "required": ["query"], "additionalProperties": False}},
 ]
 RESOURCES = [{"uri": "sagaz://provenance", "name": "Provenance", "mimeType": "application/json"}]
 PROMPTS = [{"name": "sagaz_brief", "description": "Prepare a contextual brief for offline use",
             "arguments": [{"name": "brief", "description": "User brief", "required": True}]}]
 
 
-def dispatch(payload, scope):
+def dispatch(payload, scope, db_path=None):
     req = validate_rpc(payload)
     method = req["method"]
     params = req.get("params") or {}
@@ -59,7 +66,7 @@ def dispatch(payload, scope):
         except Denied:
             return rpc_error(req, -32003, "Tool not permitted")
         try:
-            data = Bus().call(scope, name, params.get("arguments") or {})
+            data = Bus(db_path=db_path).call(scope, name, params.get("arguments") or {})
         except (Denied, ValueError):
             return rpc_error(req, -32602, "Tool arguments or permissions invalid")
         import json

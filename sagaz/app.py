@@ -11,6 +11,7 @@ import os
 from pathlib import Path
 import secrets
 import sys
+import subprocess
 import threading
 from urllib.parse import urlparse, parse_qs
 import uuid
@@ -28,6 +29,8 @@ from sagaz.gateway.service import Gateway
 from sagaz.gateway.policy import authenticate, Denied
 from sagaz.gateway.router import ProviderUnavailable
 from sagaz.gateway.protocols import ProtocolError
+from sagaz.discord_memory import DiscordMemory
+from sagaz.god import public_dict, resolve
 
 
 MATRIX_URL = '/apps/hooleesh33t-matrix-v1/'
@@ -41,6 +44,7 @@ class Server(ThreadingHTTPServer):
         self.state_root=Path(state_root) if state_root else ROOT/'projects/sagaz'
         self.busy=threading.BoundedSemaphore(2)
         self.gateway=Gateway(self.state_root)
+        self.god_level=resolve().name
         super().__init__(address,Handler)
 
 
@@ -127,7 +131,20 @@ class Handler(BaseHTTPRequestHandler):
                 return self.send(200,json.loads(file.read_text(encoding='utf-8')))
             except ValueError:return self.send(400,{'error':'Projeto inválido'})
         if path=='/api/status':
-            return self.send(200,{'name':'SagaZ ZeRo','persona':'HooLeeSheet','organization':'Systemia Solutions','version':(ROOT/'VERSION').read_text().strip(),'model_configured':bool(os.environ.get('DSANT_BASE_URL') and os.environ.get('DSANT_MODEL')),'default_mode':'local_preparation','shell':False,'sources':len(CORE.registry()['entries'])})
+            return self.send(200,{'name':'SagaZ ZeRo','persona':'HooLeeSheet','organization':'Systemia Solutions','version':(ROOT/'VERSION').read_text().strip(),'model_configured':bool(os.environ.get('DSANT_BASE_URL') and os.environ.get('DSANT_MODEL')),'default_mode':'local_preparation','shell':False,'god_mode':public_dict(resolve(self.server.god_level)),'sources':len(CORE.registry()['entries'])})
+        if path=='/api/god':
+            if self.scope().connector != 'local-ui': return self.send(403,{'error':'Sessão necessária'})
+            return self.send(200, public_dict(resolve(self.server.god_level)))
+        if path.startswith('/api/discord/'):
+            if self.scope().connector != 'local-ui': return self.send(403,{'error':'Sessão necessária'})
+            memory = DiscordMemory(self.server.state_root / 'discord_memory.sqlite3')
+            try:
+                if path == '/api/discord/summary': return self.send(200, memory.summary())
+                params = parse_qs(urlparse(self.path).query, keep_blank_values=True)
+                query = params.get('q', [''])[0]
+                limit = int(params.get('limit', ['20'])[0])
+                return self.send(200, memory.search(query, limit=limit))
+            except (ValueError, TypeError): return self.send(400, {'error':'Consulta Discord inválida'})
         if path=='/api/integrations' and self.scope().connector!='local-ui':return self.send(403,{'error':'Sessão necessária'})
         if path=='/api/integrations':return self.send(200,json.loads((ROOT/'knowledge/integrations.json').read_text(encoding='utf-8')))
         if path=='/api/sources' and self.scope().connector!='local-ui':return self.send(403,{'error':'Sessão necessária'})
@@ -166,6 +183,13 @@ class Handler(BaseHTTPRequestHandler):
             if not isinstance(data,dict):raise ValueError('Corpo JSON inválido')
             if self.path in ('/api/chat','/api/research','/api/matrix/chat') and scope.connector!='local-ui':
                 raise Denied('Somente sessão local pode preparar tarefas ou pesquisar')
+            if self.path == '/api/god/toggle':
+                if scope.connector != 'local-ui': raise Denied('Somente sessão local pode alterar o perfil')
+                level = data.get('level')
+                if level not in ('deus', 'devocional'):
+                    raise ValueError('level deve ser deus ou devocional')
+                self.server.god_level = level
+                return self.send(200, public_dict(resolve(level)))
             if self.path=='/api/chat':
                 result=prepare_task(data.get('brief'),data.get('niche','general'),data.get('method','cinematic-3d'),data.get('use_model',False),self.server.state_root,parent_id=data.get('parent_id'))
             elif self.path=='/api/matrix/chat':
@@ -197,16 +221,34 @@ def serve(port=8080,state_root=None,host=None):
         except KeyboardInterrupt:pass
 
 
+def operator_shell():
+    if not sys.stdin.isatty() or not sys.stdout.isatty():
+        raise ValueError('Abra um terminal interativo para usar o shell.')
+    executable = os.environ.get('COMSPEC', 'cmd.exe') if os.name == 'nt' else os.environ.get('SHELL', '/bin/sh')
+    return subprocess.call([executable])
+
+
 def cli(use_model=False):
     blue='\033[38;5;39m' if sys.stdout.isatty() else ''
     reset='\033[0m' if blue else ''
-    print(blue+'HooLeeSh33t Matrix · /cti · /skills · /status · /criar <briefing> · sair'+reset)
+    print(blue+'HooLeeSh33t Matrix · /ajuda · /shell · sair'+reset)
+    parent_id = None
     while True:
         try:brief=input(blue+'SagaZ > '+reset).strip()
         except (EOFError,KeyboardInterrupt):break
         if brief.casefold() in ('sair','exit','quit'):break
         if not brief:continue
-        try:print(operator_command(brief,use_model=use_model)['answer'])
+        try:
+            if brief.casefold() == '/shell':
+                operator_shell()
+                continue
+            if brief.casefold() == '/limpar':
+                parent_id = None
+                print('Nova conversa.')
+                continue
+            result = operator_command(brief, use_model=use_model, parent_id=parent_id)
+            parent_id = result.get('id', parent_id)
+            print(result['answer'])
         except (ValueError,OSError) as exc:print('Erro:',exc)
 
 if __name__=='__main__':
