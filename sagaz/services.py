@@ -73,7 +73,7 @@ def operator_command(brief, *, use_model=False, state_root=None, parent_id=None)
     if command == '/shell':
         return {'answer': 'Abra o terminal da VPS por SSH e use sagaz shell.', 'mode': 'command'}
     if command.startswith('/') and command not in ('/cti', '/skills', '/status', '/god', '/discord', '/modelos', '/criar'):
-        raise ValueError('Comando desconhecido. Use /ajuda.')
+        return {'answer': 'Comando desconhecido. Use /ajuda. Nenhuma tarefa executada.', 'mode': 'command'}
     if command == '/god':
         return {'answer': json.dumps(public_dict(resolve(query or None)), ensure_ascii=False, indent=2), 'mode': 'command'}
     if command == '/discord':

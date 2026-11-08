@@ -29,6 +29,8 @@ def main(argv=None):
     create.add_argument('briefing')
     create.add_argument('--use-model', action='store_true', default=argparse.SUPPRESS)
     sub.add_parser('shell', help='Abrir shell interativo com as permissões da conta atual')
+    operator = sub.add_parser('operator', help='Console operador HooLeeSh33t (TUI) com chat BYOK real')
+    operator.add_argument('--use-model', action='store_true', default=argparse.SUPPRESS)
     sub.add_parser('doctor')
     sub.add_parser('credits')
     sub.add_parser('connect')
@@ -64,6 +66,9 @@ def main(argv=None):
             return operator_shell()
         except (ValueError, OSError) as exc:
             parser.exit(1, f'Erro: {exc}\n')
+    elif args.command == 'operator':
+        from sagaz.operator_tui import run as operator_console
+        return operator_console(getattr(args, 'use_model', False))
     elif args.command=='doctor':
         from sagaz.services import CORE
         print(json.dumps(CORE.doctor(), ensure_ascii=False, indent=2))
