@@ -17,7 +17,8 @@ te prender: você manda, ela executa. Pega a visão? Então cola aí. 😎
 - 🔑 **BYOK** — você pluga **sua** chave (OpenAI-compatible: OpenAI, Claude, Gemini, Ollama local, seu endpoint…). Nada de chave nossa, nada de conta pra criar.
 - 🧠 **Multi-modelo** — troca de modelo na hora, sem drama.
 - 🖥️ **Duas caras, a mesma alma:** **HooLeeSh33t Matrix** (web) e o **Console Operador** (terminal/TUI).
-- 🧩 **Skills** — memória de Discord (consentida e só-leitura), CTI, criativo dSant… e dá pra plugar mais.
+- 🤖 **Agente de código** — `sagaz agent` no estilo Claude Code: lê/edita arquivos, roda comando e mexe no Git **sob permissão e confirmação**. Veja [`docs/AGENT.md`](docs/AGENT.md).
+- 🧩 **Skills + Plugins** — memória de Discord (consentida e só-leitura), CTI, criativo dSant… e **plugins** que registram novas ferramentas.
 - 🔒 **Na responsa** — chave guardada em arquivo `0600`, ação destrutiva **sempre** pede confirmação, nada exposto na internet sem você mandar.
 - 🪶 **Leve que só** — o núcleo roda **só com Python padrão**. Zero `pip` obrigatório.
 
@@ -103,6 +104,8 @@ Sem provedor, o Core ainda prepara seu briefing localmente. Tá sempre fazendo a
 |---|---|
 | `python3 -m sagaz operator` | Console operador (TUI) com chat real |
 | `python3 -m sagaz --web` | Interface web HooLeeSh33t Matrix |
+| `python3 -m sagaz agent "<objetivo>"` | Agente de código (lê/edita/roda/git sob permissão) |
+| `python3 -m sagaz plugin list` | Lista plugins instalados |
 | `python3 -m sagaz god [deus\|devocional]` | Mostra/escolhe o perfil de autonomia |
 | `python3 -m sagaz discord ingest msgs.json --consent` | Memória Discord (consentida, local) |
 | `python3 -m sagaz doctor` | Diagnóstico rápido do núcleo |

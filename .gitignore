@@ -14,3 +14,6 @@ dist/
 .claude/skills/
 .opencode/skills/
 *.log
+
+# Habilitação local de plugins (por usuário)
+plugins/enabled.json
