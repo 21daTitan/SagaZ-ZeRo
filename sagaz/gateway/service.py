@@ -9,10 +9,12 @@ from sagaz.gateway.skills import select_skill
 from sagaz.gateway.protocols import validate_chat, ProtocolError
 from sagaz.gateway.router import connection_details, complete, ProviderUnavailable
 from sagaz.gateway.mcp import dispatch
+from sagaz.god import system_prompt, resolve
 
 
 class Gateway:
     def __init__(self, state_root: Path):
+        self.state_root = Path(state_root)
         state = Path(state_root).parent / "gateway_state"
         self.audit = AuditLedger(state / "audit.jsonl", key=os.environ.get("SAGAZ_AUDIT_KEY"))
         self.cost = CostMeter(state / "cost.jsonl")
@@ -50,6 +52,10 @@ class Gateway:
         except ProviderUnavailable as exc:
             raise ProviderUnavailable(str(exc))
         request = validate_chat(payload, model)
+        profile = resolve()
+        messages = request.get('messages') or []
+        if not messages or messages[0].get('role') != 'system':
+            request['messages'] = [{'role': 'system', 'content': system_prompt(profile)}] + messages
         budget = os.environ.get("SAGAZ_BUDGET_USD")
         if budget:
             report = self.cost.report(connector=scope.connector, budget_usd=budget)
@@ -73,7 +79,7 @@ class Gateway:
 
     def mcp(self, scope, payload):
         self.require(scope, "mcp")
-        return dispatch(payload, scope)
+        return dispatch(payload, scope, self.state_root / "discord_memory.sqlite3")
 
     def select(self, scope, payload):
         self.require(scope, "skills_select")

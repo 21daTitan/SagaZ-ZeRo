@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 import uuid
+from sagaz.discord_memory import DiscordMemory, load_json
+from sagaz.god import public_dict, resolve
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -63,7 +65,26 @@ def operator_command(brief, *, use_model=False, state_root=None, parent_id=None)
     """Shared Matrix entry point for browser and terminal."""
     if not isinstance(brief, str) or not brief.strip():
         raise ValueError('Informe um comando ou briefing.')
-    command, _, query = brief.strip().partition(' ')
+    command, *arguments = brief.strip().split(maxsplit=1)
+    command = command.casefold()
+    query = arguments[0] if arguments else ''
+    if command in ('/ajuda', '/help'):
+        return {'answer': '/cti [termo] · /skills · /status · /god · /discord [stats|search <termo>] · /modelos · /criar <briefing> · /limpar', 'mode': 'command'}
+    if command == '/shell':
+        return {'answer': 'Abra o terminal da VPS por SSH e use sagaz shell.', 'mode': 'command'}
+    if command.startswith('/') and command not in ('/cti', '/skills', '/status', '/god', '/discord', '/modelos', '/criar'):
+        return {'answer': 'Comando desconhecido. Use /ajuda. Nenhuma tarefa executada.', 'mode': 'command'}
+    if command == '/god':
+        return {'answer': json.dumps(public_dict(resolve(query or None)), ensure_ascii=False, indent=2), 'mode': 'command'}
+    if command == '/discord':
+        memory = DiscordMemory((Path(state_root) if state_root else ROOT / 'projects/sagaz') / 'discord_memory.sqlite3')
+        if not query or query.casefold() == 'stats':
+            data = memory.summary()
+        elif query.casefold().startswith('search '):
+            data = memory.search(query[7:])
+        else:
+            data = memory.search(query)
+        return {'answer': json.dumps(data, ensure_ascii=False, indent=2), 'mode': 'command'}
     if command in ('/cti', '/skills', '/status', '/modelos'):
         from sagaz.catalog import skills, connection
         from sagaz.cti import search, summary
@@ -73,7 +94,12 @@ def operator_command(brief, *, use_model=False, state_root=None, parent_id=None)
             data = skills() if command == '/skills' else connection()
         return {'answer': json.dumps(data, ensure_ascii=False, indent=2), 'mode': 'command'}
     if command == '/criar':
-        brief = query
+        return prepare_task(query, use_model=use_model, state_root=state_root, parent_id=None)
+    # Texto livre: conversa real com o modelo quando há provedor conectado.
+    from sagaz.catalog import connection as _connection
+    if use_model and _connection()['configured']:
+        from sagaz.ai_session import respond
+        return respond(brief, state_root=state_root, parent_id=parent_id)
     return prepare_task(brief, use_model=use_model, state_root=state_root, parent_id=parent_id)
 
 

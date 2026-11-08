@@ -62,6 +62,7 @@ os comandos Matrix em texto. A interface anterior está em `/legacy`.
   do Core e configure `DSANT_BASE_URL` e `DSANT_MODEL`, além da chave quando exigida.
   Por padrão, o Core prepara o briefing localmente. O provedor pode cobrar por geração.
 
-Para administração da VPS, use SSH com a sua conta de operador. Para o
+Para administração da VPS, entre por SSH e use `python -m sagaz shell`
+ou `/shell` no console Matrix. O shell herda as permissões da conta ativa. Para o
 GitHub, use as credenciais do Git local. A interface Matrix usa a sessão
 local e os escopos existentes do SagaZ.
