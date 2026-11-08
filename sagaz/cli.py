@@ -41,9 +41,12 @@ def main(argv=None):
     agent.add_argument('goal', nargs='?', help='objetivo; sem ele, abre modo interativo')
     agent.add_argument('--allow', default='', help='escopos extras: fs.write,exec,git.write')
     agent.add_argument('--yes', action='store_true', help='auto-confirma ações sensíveis (perigoso)')
+    agent.add_argument('--sandbox', action='store_true', help='roda run_command em container Docker isolado')
     plugin = sub.add_parser('plugin', help='Plugins que registram ferramentas no agente')
     plugin.add_argument('operation', choices=('list', 'enable', 'disable'))
     plugin.add_argument('name', nargs='?')
+    desktop = sub.add_parser('desktop', help='Abre a interface HooLeeSh33t Matrix como app (navegador)')
+    desktop.add_argument('--port', type=int, default=8080)
     sub.add_parser('doctor')
     sub.add_parser('credits')
     sub.add_parser('connect')
@@ -84,10 +87,18 @@ def main(argv=None):
         return operator_console(getattr(args, 'use_model', False))
     elif args.command == 'agent':
         from sagaz.agent.console import run as agent_run
-        return agent_run(goal=args.goal, allow=args.allow, auto_yes=args.yes)
+        return agent_run(goal=args.goal, allow=args.allow, auto_yes=args.yes, sandbox=args.sandbox)
     elif args.command == 'plugin':
         from sagaz.agent.console import plugin_cli
         return plugin_cli(args.operation, args.name)
+    elif args.command == 'desktop':
+        import threading
+        import webbrowser
+        url = f'http://127.0.0.1:{args.port}/apps/hooleesh33t-matrix-v1/'
+        print(f'Abrindo HooLeeSh33t Matrix em {url} — Ctrl+C para encerrar.')
+        threading.Timer(1.5, lambda: webbrowser.open(url)).start()
+        serve(args.port)
+        return 0
     elif args.command=='doctor':
         from sagaz.services import CORE
         print(json.dumps(CORE.doctor(), ensure_ascii=False, indent=2))

@@ -1,5 +1,19 @@
 # SagaZ ZeRo — Changelog
 
+## 3.7.0-zeRo · HooLeeSh33t Edition by dSant — atualização 3 — 2026-11-08
+
+Fase 6 do roadmap: desktop + sandbox de execução.
+
+- `sagaz desktop [--port]` — abre a interface HooLeeSh33t Matrix como app (navegador);
+  documentado o caminho Tauri/Electron para app nativo em `docs/DESKTOP.md`.
+- **Sandbox em container** no agente: `sagaz agent ... --sandbox` roda `run_command`
+  em `docker run --rm --network none --cap-drop ALL --security-opt no-new-privileges`,
+  com a raiz montada e limites; se não houver Docker, **avisa e não executa**
+  (nunca cai para execução sem isolamento). Imagem via `SAGAZ_SANDBOX_IMAGE`.
+- `tests/test_agent.py`: +4 casos de sandbox (comando isolado, rede opt-in,
+  escopo+confirmação, Docker ausente). Suíte total: 89 testes.
+
+
 ## 3.7.0-zeRo · HooLeeSh33t Edition by dSant — atualização 2 — 2026-11-08
 
 Agente de código (estilo Claude Code), com GitHub e plugins — pacote `sagaz/agent/`.

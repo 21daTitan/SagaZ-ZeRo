@@ -65,11 +65,15 @@ def _s(props: dict, required: list[str]) -> dict:
     return {'type': 'object', 'properties': props, 'required': required, 'additionalProperties': False}
 
 
-def register_builtin(registry: Registry, root) -> Registry:
-    """Registra o conjunto padrão de ferramentas de arquivo, exec e git."""
+def register_builtin(registry: Registry, root, exec_tool=None) -> Registry:
+    """Registra o conjunto padrão de ferramentas de arquivo, exec e git.
+
+    ``exec_tool`` permite trocar o executor (ex.: ``SandboxExec`` em container);
+    quando ausente, usa o ``ExecTools`` local padrão.
+    """
     root = Path(root).resolve()
     fs = FsTools(root, registry.policy)
-    ex = ExecTools(root, registry.policy)
+    ex = exec_tool if exec_tool is not None else ExecTools(root, registry.policy)
     git = GitTools(root, registry.policy)
 
     specs = [
@@ -88,8 +92,10 @@ def register_builtin(registry: Registry, root) -> Registry:
         ToolSpec('fs_edit', 'Substitui um trecho único em um arquivo (backup; confirma).', 'fs.write',
                  _s({'path': {'type': 'string'}, 'old': {'type': 'string'}, 'new': {'type': 'string'}},
                     ['path', 'old', 'new']), lambda path, old, new: fs.edit(path, old, new)),
-        ToolSpec('run_command', 'Executa um comando de shell na raiz (trava destrutiva + confirma).', 'exec',
-                 _s({'command': {'type': 'string'}}, ['command']), lambda command: ex.run(command)),
+        ToolSpec('run_command',
+                 ('Executa um comando de shell em sandbox (container)' if exec_tool is not None
+                  else 'Executa um comando de shell na raiz') + ' — trava destrutiva + confirmação.',
+                 'exec', _s({'command': {'type': 'string'}}, ['command']), lambda command: ex.run(command)),
         ToolSpec('git_status', 'git status do projeto.', 'git.read',
                  _s({}, []), lambda: git.status()),
         ToolSpec('git_diff', 'git diff (ou --cached).', 'git.read',

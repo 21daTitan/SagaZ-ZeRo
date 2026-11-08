@@ -43,9 +43,13 @@ def _confirmer(auto_yes: bool):
     return ask
 
 
-def build_registry(root, allow='', auto_yes=False):
+def build_registry(root, allow='', auto_yes=False, sandbox=False, allow_network=False):
     policy = AgentPolicy(READ_ONLY | _parse_scopes(allow), confirm=_confirmer(auto_yes), auto_confirm=auto_yes)
-    registry = register_builtin(Registry(policy), root)
+    exec_tool = None
+    if sandbox:
+        from sagaz.agent.sandbox import SandboxExec
+        exec_tool = SandboxExec(root, policy, allow_network=allow_network)
+    registry = register_builtin(Registry(policy), root, exec_tool=exec_tool)
     try:
         loaded = PluginManager(root).load_into(registry)
     except AgentError as exc:
@@ -64,7 +68,7 @@ def _print_event(event: dict) -> None:
         print(f'  {_R}(limite de iterações){_Z}')
 
 
-def run(goal=None, allow='', auto_yes=False, root=None, max_iterations=None) -> int:
+def run(goal=None, allow='', auto_yes=False, root=None, max_iterations=None, sandbox=False) -> int:
     from sagaz.god import resolve
     from sagaz.provider_config import load as load_provider
     from sagaz.gateway.router import ProviderUnavailable
@@ -74,7 +78,11 @@ def run(goal=None, allow='', auto_yes=False, root=None, max_iterations=None) -> 
         load_provider()
     except Exception:
         pass
-    registry, policy, loaded = build_registry(root, allow, auto_yes)
+    if sandbox:
+        from sagaz.agent.sandbox import available as _sandbox_available
+        if not _sandbox_available():
+            print(f'{_R}[sandbox] Docker indisponível — comandos de shell não vão rodar.{_Z}', file=sys.stderr)
+    registry, policy, loaded = build_registry(root, allow, auto_yes, sandbox=sandbox)
     iters = int(max_iterations or resolve().max_iterations or 8)
 
     from sagaz.agent.loop import AgentLoop
