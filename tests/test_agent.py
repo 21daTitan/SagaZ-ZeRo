@@ -5,6 +5,9 @@ import subprocess
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
+
+from sagaz.agent.sandbox import SandboxExec
 
 from sagaz.agent.core import (AgentPolicy, ConfirmationRequired, PathEscape, READ_ONLY,
                               ScopeDenied, resolve_in_root)
@@ -139,6 +142,38 @@ class GitToolsTests(unittest.TestCase):
             self._repo(tmp)
             with self.assertRaises(ScopeDenied):
                 GitTools(tmp, AgentPolicy(READ_ONLY)).commit('x')
+
+
+class SandboxTests(unittest.TestCase):
+    def test_build_command_isolated(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            sb = SandboxExec(tmp, _writable())
+            argv = sb.build_command('echo oi', 30)
+            self.assertEqual(argv[:3], ['docker', 'run', '--rm'])
+            self.assertIn('none', argv)              # sem rede por padrão
+            self.assertIn('--cap-drop', argv)
+            self.assertIn('no-new-privileges', argv)
+            self.assertEqual(argv[-3:], ['sh', '-c', 'echo oi'])
+
+    def test_network_opt_in(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            argv = SandboxExec(tmp, _writable(), allow_network=True).build_command('x', 5)
+            self.assertIn('bridge', argv)
+
+    def test_requires_scope_and_confirmation(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaises(ScopeDenied):
+                SandboxExec(tmp, AgentPolicy(READ_ONLY)).run('echo hi')
+            denier = AgentPolicy({'exec'}, confirm=lambda a: False)
+            with self.assertRaises(ConfirmationRequired):
+                SandboxExec(tmp, denier).run('rm -rf ./x')
+
+    def test_docker_missing_is_explicit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch('sagaz.agent.sandbox.available', return_value=False):
+                out = SandboxExec(tmp, _writable()).run('echo oi')
+            self.assertFalse(out['available'])
+            self.assertIsNone(out['returncode'])
 
 
 class RegistryTests(unittest.TestCase):

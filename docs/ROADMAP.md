@@ -7,10 +7,11 @@
 
 Documento de planejamento. Nada aqui executa sozinho; é o mapa do que construir.
 
-> **Status (atualização 2):** Fases **1, 2, 3, 4 e 5 implementadas** no pacote
-> `sagaz/agent/` — ferramentas de arquivo/exec/git, loop de agente por tool-calling,
-> escopos + confirmação e sistema de plugins. Uso em [`docs/AGENT.md`](AGENT.md).
-> Pendente: Fase 6 (empacotar desktop + sandbox em container).
+> **Status (atualização 3):** Fases **1–6 implementadas**. Agente completo em
+> `sagaz/agent/` (arquivo/exec/git, loop por tool-calling, escopos + confirmação,
+> plugins). Fase 6: `sagaz desktop` (app) + **sandbox em container** no agente
+> (`--sandbox`). Uso em [`docs/AGENT.md`](AGENT.md) e [`docs/DESKTOP.md`](DESKTOP.md).
+> Evolução contínua fica por conta das próximas atualizações.
 
 ---
 

@@ -106,6 +106,8 @@ Sem provedor, o Core ainda prepara seu briefing localmente. Tá sempre fazendo a
 | `python3 -m sagaz --web` | Interface web HooLeeSh33t Matrix |
 | `python3 -m sagaz agent "<objetivo>"` | Agente de código (lê/edita/roda/git sob permissão) |
 | `python3 -m sagaz plugin list` | Lista plugins instalados |
+| `python3 -m sagaz desktop` | Abre a HooLeeSh33t Matrix como app |
+| `python3 -m sagaz agent "<obj>" --sandbox` | Agente rodando comando em container isolado |
 | `python3 -m sagaz god [deus\|devocional]` | Mostra/escolhe o perfil de autonomia |
 | `python3 -m sagaz discord ingest msgs.json --consent` | Memória Discord (consentida, local) |
 | `python3 -m sagaz doctor` | Diagnóstico rápido do núcleo |
