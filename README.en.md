@@ -19,10 +19,38 @@ your machine, your VPS, even Termux. You call the shots, it does the work. 😎
 
 ---
 
+## 📦 Install — any terminal, any OS
+
+**You only need `git` + `Python 3.10+`.** The core runs on the standard library —
+**no `pip` required.**
+
+```bash
+# Linux (Debian/Ubuntu)
+sudo apt update && sudo apt install -y git python3
+#   Fedora: sudo dnf install -y git python3   |   Arch: sudo pacman -S --needed git python
+
+# macOS (Homebrew)
+brew install git python
+
+# Android (Termux)
+pkg update && pkg install -y git python
+
+# then, everywhere:
+git clone https://github.com/21daTitan/SagaZ-ZeRo.git
+cd SagaZ-ZeRo
+python3 -m sagaz operator          # Windows: python -m sagaz operator
+```
+
+Windows (PowerShell) prerequisites: `winget install Git.Git Python.Python.3.12`.
+Always run from **inside** the `SagaZ-ZeRo` folder. Media skills are optional:
+`pip install -r requirements-media.txt`.
+
+---
+
 ## Run it (3 steps) ▶️
 
 ```bash
-python3 dsant.py doctor                 # 1) health check
+python3 -m sagaz doctor                 # 1) health check
 python3 -m sagaz operator               # 2) operator console → /conectar, /testar, then just chat
 python3 -m sagaz --web --port 8080      # 3) or the HooLeeSh33t Matrix web UI
 #    On a VPS, use an SSH tunnel — never expose the raw port.
