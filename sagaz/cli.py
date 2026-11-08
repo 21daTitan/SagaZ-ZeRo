@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+import sys
 from pathlib import Path
 
 from sagaz.app import cli as interactive_cli, operator_shell, serve
@@ -20,6 +21,11 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 def main(argv=None):
+    try:
+        from sagaz.provider_config import load as _load_provider
+        _load_provider()
+    except (ValueError, OSError, json.JSONDecodeError) as exc:
+        print(f'[provedor] configuração salva ignorada: {exc}', file=sys.stderr)
     parser = argparse.ArgumentParser(description='HooLeeSheet · SagaZ ZeRo v3.7.0')
     parser.add_argument('--web', action='store_true', help='Legacy: launch local Web UI')
     parser.add_argument('--port', type=int, default=8080)

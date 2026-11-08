@@ -94,7 +94,12 @@ def operator_command(brief, *, use_model=False, state_root=None, parent_id=None)
             data = skills() if command == '/skills' else connection()
         return {'answer': json.dumps(data, ensure_ascii=False, indent=2), 'mode': 'command'}
     if command == '/criar':
-        brief = query
+        return prepare_task(query, use_model=use_model, state_root=state_root, parent_id=None)
+    # Texto livre: conversa real com o modelo quando há provedor conectado.
+    from sagaz.catalog import connection as _connection
+    if use_model and _connection()['configured']:
+        from sagaz.ai_session import respond
+        return respond(brief, state_root=state_root, parent_id=parent_id)
     return prepare_task(brief, use_model=use_model, state_root=state_root, parent_id=parent_id)
 
 

@@ -195,7 +195,7 @@ class Handler(BaseHTTPRequestHandler):
             elif self.path=='/api/matrix/chat':
                 result = operator_command(data.get('brief'), state_root=self.server.state_root,
                                           parent_id=data.get('parent_id'),
-                                          use_model=os.environ.get('SAGAZ_MATRIX_USE_MODEL') == '1')
+                                          use_model=(os.environ.get('SAGAZ_MATRIX_USE_MODEL', 'auto') != '0' and connection()['configured']))
             elif self.path=='/api/research':result=research(data.get('url',''),self.server.state_root)
             elif self.path=='/v1/chat/completions':result=self.server.gateway.chat(scope,data)
             elif self.path=='/mcp':result=self.server.gateway.mcp(scope,data)
@@ -215,6 +215,11 @@ def serve(port=8080,state_root=None,host=None):
         raise ValueError('Host não permitido')
     if host == '0.0.0.0' and os.environ.get('SAGAZ_BIND_ALL') != '1':
         raise ValueError('Defina SAGAZ_BIND_ALL=1 explicitamente para expor todas as interfaces')
+    try:
+        from sagaz.provider_config import load as _load_provider
+        _load_provider()
+    except (ValueError, OSError, json.JSONDecodeError) as exc:
+        print(f'[provedor] configuração salva ignorada: {exc}', file=sys.stderr)
     with Server((host,port),state_root) as server:
         print(f'SagaZ ZeRo · http://127.0.0.1:{server.server_port} · modo local por padrão',flush=True)
         try:server.serve_forever()
