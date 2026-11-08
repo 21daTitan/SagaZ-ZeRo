@@ -37,6 +37,13 @@ def main(argv=None):
     sub.add_parser('shell', help='Abrir shell interativo com as permissões da conta atual')
     operator = sub.add_parser('operator', help='Console operador HooLeeSh33t (TUI) com chat BYOK real')
     operator.add_argument('--use-model', action='store_true', default=argparse.SUPPRESS)
+    agent = sub.add_parser('agent', help='Agente de código: ferramentas locais + modelo (tool-calling)')
+    agent.add_argument('goal', nargs='?', help='objetivo; sem ele, abre modo interativo')
+    agent.add_argument('--allow', default='', help='escopos extras: fs.write,exec,git.write')
+    agent.add_argument('--yes', action='store_true', help='auto-confirma ações sensíveis (perigoso)')
+    plugin = sub.add_parser('plugin', help='Plugins que registram ferramentas no agente')
+    plugin.add_argument('operation', choices=('list', 'enable', 'disable'))
+    plugin.add_argument('name', nargs='?')
     sub.add_parser('doctor')
     sub.add_parser('credits')
     sub.add_parser('connect')
@@ -75,6 +82,12 @@ def main(argv=None):
     elif args.command == 'operator':
         from sagaz.operator_tui import run as operator_console
         return operator_console(getattr(args, 'use_model', False))
+    elif args.command == 'agent':
+        from sagaz.agent.console import run as agent_run
+        return agent_run(goal=args.goal, allow=args.allow, auto_yes=args.yes)
+    elif args.command == 'plugin':
+        from sagaz.agent.console import plugin_cli
+        return plugin_cli(args.operation, args.name)
     elif args.command=='doctor':
         from sagaz.services import CORE
         print(json.dumps(CORE.doctor(), ensure_ascii=False, indent=2))

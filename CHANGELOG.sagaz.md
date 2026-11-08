@@ -1,5 +1,29 @@
 # SagaZ ZeRo — Changelog
 
+## 3.7.0-zeRo · HooLeeSh33t Edition by dSant — atualização 2 — 2026-11-08
+
+Agente de código (estilo Claude Code), com GitHub e plugins — pacote `sagaz/agent/`.
+
+### Agente
+- `sagaz agent "<objetivo>"` — loop de agente por **tool-calling** OpenAI, rodando
+  pelo Gateway auditado. Só-leitura por padrão; `--allow fs.write,exec,git.write`
+  libera poderes; ações sensíveis **confirmam** (ou `--yes`).
+- **Ferramentas**: `fs_list/read/search/stat/write/edit` (confinadas à raiz, backup),
+  `run_command` (trava `is_destructive_command` + confirmação, timeout),
+  `git_status/diff/branch/add/commit/push` (**sem force-push**; credenciais locais).
+- **Escopos** `fs.read/fs.write/exec/git.read/git.write` com confirmação; nada é
+  exposto na rede (a superfície web/MCP continua só-leitura).
+
+### Plugins
+- Plugins registram **ferramentas** via `plugins/<nome>/plugin.json`; cada tool só
+  pede escopo declarado; carregam só quando **habilitados** (`sagaz plugin enable`).
+- Exemplo em `plugins/example-wordcount/`. Docs em `docs/AGENT.md`.
+
+### Testes
+- `tests/test_agent.py` (23 casos): confinamento, escopos, confirmação, exec com
+  trava, git sem force-push, registro, plugins e loop com modelo mockado.
+
+
 ## 3.7.0-zeRo · HooLeeSh33t Edition by dSant — atualização 1 — 2026-11-08
 
 Primeira atualização da edição (interface + skills adicionais), sobre a linha de
