@@ -79,6 +79,7 @@ LICENSE (se existir)
 | 2026-11-09 | `web_ui.py` | Conserto da interface Web (só dentro de `HTML_CONTENT`, nenhuma rota de backend tocada): provider/modelo paravam de virar `[object Object]`, status de shell/cifrado/sanitizado/anti-recusa paravam de nunca atualizar, credenciais paravam de poder forçar provider/base_url/modelo | dSanT, pedido direto no chat — "a interface tá uma merda... corrija e atualize a interface" |
 | 2026-11-09 | `web_ui.py` | `#app` tinha `grid-template-rows: auto 1fr auto` (3 linhas) pra 4 filhos (header/provider-bar/chat-area/input-area) — o `1fr` caía na provider-bar e esticava ela (vazia) quase até a tela inteira, criando o buraco preto gigante. Corrigido pra `auto auto 1fr auto` | dSanT, print mostrando o buraco preto gigante mesmo após o conserto anterior |
 | 2026-11-09 | `web_ui.py` | Chuva Matrix de fundo usava `shadowBlur` por glifo/coluna/frame (~22 FPS) — operação cara de Canvas 2D, travava o celular. Removido o blur, agrupada a troca de fonte, frame rate reduzido | dSanT — "ta travando muito tambem" |
+| 2026-11-09 | `web_ui.py` | Buraco preto persistiu em Chrome Android real mesmo com o grid corrigido (confirmado: aba nova, commit certo, serviço saudável). `#app` trocou de CSS Grid pra flexbox de coluna simples (`flex:0 0 auto` nos 3 filhos fixos, `flex:1 1 auto; min-height:0` no `#chat-area`) — layout mais robusto e previsível entre navegadores | dSanT — "vai tomar no cu" (buraco continuava mesmo em aba nova confirmada) |
 
 ---
 

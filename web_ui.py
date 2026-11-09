@@ -122,17 +122,21 @@ HTML_CONTENT = r"""
   }
 
   /* ── LAYOUT ── */
-  /* #app tem 4 filhos diretos (header, provider-bar, chat-area,
-     input-area), mas isso aqui definia só 3 "linhas" de grid — o
-     filho a mais caía numa linha implícita, e o 1fr (que deveria ir
-     pro chat-area) acabava preso na provider-bar, esticando ela até
-     quase a tela inteira (vazia) e espremendo o chat numa faixa
-     minúscula. É isso que causava o buraco preto gigante entre a
-     barra de provider/modelo e as mensagens. 4 filhos, 4 linhas. */
+  /* Era CSS Grid com grid-template-rows explícito — e isso deu bug
+     duas vezes (linhas contadas errado, e mesmo corrigido o buraco
+     preto persistiu em Chrome Android real, fora do que eu conseguia
+     reproduzir em teste). Trocado pra flexbox simples: cada filho
+     direto de #app (header, provider-bar, chat-area, input-area) só
+     ocupa a altura do próprio conteúdo (flex: 0 0 auto), exceto
+     #chat-area, que pega o que sobrar (flex: 1 1 auto + min-height:0
+     — sem o min-height:0 um filho flex não encolhe abaixo do
+     conteúdo, e o overflow-y:auto dele some). Flexbox de coluna com
+     "o do meio cresce" é o padrão mais testado que existe pra isso,
+     bem menos propenso a esse tipo de bug de dimensionamento. */
   #app {
     position: relative; z-index: 1;
-    display: grid;
-    grid-template-rows: auto auto 1fr auto;
+    display: flex;
+    flex-direction: column;
     height: 100vh;
     max-width: 980px;
     margin: 0 auto;
@@ -141,6 +145,7 @@ HTML_CONTENT = r"""
 
   /* ── HEADER ── */
   header {
+    flex: 0 0 auto;
     display: flex; align-items: center; justify-content: space-between;
     padding: 10px 0 8px;
     border-bottom: 1px solid var(--cyan-border);
@@ -191,6 +196,7 @@ HTML_CONTENT = r"""
 
   /* ── PROVIDER BAR ── */
   #provider-bar {
+    flex: 0 0 auto;
     display: flex; flex-direction: column; gap: 6px;
     padding: 7px 0 5px;
     border-bottom: 1px solid rgba(0,245,255,0.1);
@@ -228,6 +234,11 @@ HTML_CONTENT = r"""
 
   /* ── CHAT AREA ── */
   #chat-area {
+    /* flex:1 pega o espaço que sobra; min-height:0 é obrigatório aqui —
+       sem isso um filho flex não encolhe abaixo da altura do próprio
+       conteúdo, e o overflow-y:auto simplesmente não funciona (o item
+       cresce pra caber tudo em vez de rolar). */
+    flex: 1 1 auto; min-height: 0;
     overflow-y: auto; overflow-x: hidden;
     padding: 14px 0 10px;
     display: flex; flex-direction: column; gap: 12px;
@@ -291,6 +302,7 @@ HTML_CONTENT = r"""
 
   /* ── INPUT AREA ── */
   #input-area {
+    flex: 0 0 auto;
     padding: 8px 0 12px;
     border-top: 1px solid var(--cyan-border);
     display: flex; flex-direction: column; gap: 6px;

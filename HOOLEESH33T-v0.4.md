@@ -127,6 +127,33 @@ inteiro), e o ritmo caiu de 45ms pra 60ms por frame. Efeito visual
 continua o mesmo (chuva Matrix com cabeça clara e trilha escura),
 só sem o custo de GPU que tava travando a interface.
 
+## Correção adicional: buraco preto persistiu mesmo com o grid corrigido
+
+O conserto do `grid-template-rows` ajudou, mas em Chrome Android real
+(não reproduzido no teste headless anterior) o buraco preto continuou
+aparecendo — inclusive sem header/barra visíveis, num teste numa aba
+nova de verdade (confirmado: 1 aba só, commit certo rodando, serviço
+saudável). Em vez de continuar caçando a causa exata via print de
+celular, troquei a abordagem inteira: **`#app` deixou de ser CSS
+Grid e virou flexbox de coluna simples**.
+
+Cada filho direto (`header`, `#provider-bar`, `#chat-area`,
+`#input-area`) agora usa `flex: 0 0 auto` (ocupa só a altura do
+próprio conteúdo) — exceto `#chat-area`, que usa
+`flex: 1 1 auto; min-height: 0` (pega o espaço que sobra; o
+`min-height: 0` é obrigatório, senão um item flex não encolhe abaixo
+do tamanho do próprio conteúdo e o `overflow-y: auto` dele simplesmente
+não funciona). Flexbox-de-coluna-com-um-item-crescendo é o padrão de
+layout mais testado e previsível que existe pra isso — bem menos
+propenso a bug de dimensionamento entre navegadores do que Grid com
+linhas explícitas.
+
+Validado com Playwright emulando Pixel 7 Android (viewport, user
+agent e device scale factor reais): header 47px, barra 134px, chat
+549px, input 110px — proporções corretas. O espaço vazio que sobra
+no meio é esperado (chat novo, sem credencial, sem mensagem) — não é
+mais bug de layout quebrado.
+
 ---
 
 ## O que NÃO foi tocado além do registrado
