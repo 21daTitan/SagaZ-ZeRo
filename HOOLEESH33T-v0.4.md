@@ -179,6 +179,27 @@ inteiro pra fora da tela — e ele não volta sozinho.
 Validado simulando 8 arrastos/toques seguidos via Playwright
 (Pixel 7): o header continua em `top: 0` depois de todos eles.
 
+## Correção adicional: chat não respondia (bolha ficava vazia pra sempre)
+
+Com o layout resolvido, apareceu o bug mais sério de todos:
+provider/modelo configurados, "online", mensagem enviada — e a
+resposta nunca aparecia. Sem erro nenhum na tela.
+
+Causa raiz: `/api/chat` é um `StreamingResponse(media_type="text/plain")`
+— o servidor manda **markdown puro em texto corrido**, pedaço por
+pedaço, sem nenhum envelope (nada de `data: {...}\n\n`, nada de
+JSON, nada de `[DONE]`). O JS desta interface (herdado da reescrita
+anterior) esperava o formato SSE estilo OpenAI
+(`data: {"choices":[{"delta":{"content":"..."}}]}`), que **nunca
+existiu nesse backend**. Como nenhuma linha recebida começava com
+`"data:"`, o parser descartava cada pedaço silenciosamente — por
+isso a bolha ficava sempre vazia, sem exceção, sem erro de rede, com
+tudo "conectado".
+
+**Fix:** o leitor do stream agora só decodifica cada pedaço recebido
+e acrescenta direto ao texto da resposta — sem procurar por `data:`,
+sem fazer `JSON.parse`. É exatamente o que o servidor sempre mandou.
+
 ---
 
 ## O que NÃO foi tocado além do registrado

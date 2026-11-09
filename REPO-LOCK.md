@@ -81,6 +81,7 @@ LICENSE (se existir)
 | 2026-11-09 | `web_ui.py` | Chuva Matrix de fundo usava `shadowBlur` por glifo/coluna/frame (~22 FPS) — operação cara de Canvas 2D, travava o celular. Removido o blur, agrupada a troca de fonte, frame rate reduzido | dSanT — "ta travando muito tambem" |
 | 2026-11-09 | `web_ui.py` | Buraco preto persistiu em Chrome Android real mesmo com o grid corrigido (confirmado: aba nova, commit certo, serviço saudável). `#app` trocou de CSS Grid pra flexbox de coluna simples (`flex:0 0 auto` nos 3 filhos fixos, `flex:1 1 auto; min-height:0` no `#chat-area`) — layout mais robusto e previsível entre navegadores | dSanT — "vai tomar no cu" (buraco continuava mesmo em aba nova confirmada) |
 | 2026-11-09 | `web_ui.py` | Header sumia depois de um tempo de uso (não no load) — era a página rolando sozinha (rubber-band scroll por toque, `overflow:hidden` não trava isso 100% em mobile). `html,body` ganharam `position:fixed`+`overscroll-behavior:none`; `#chat-area`/`#user-input` ganharam `overscroll-behavior:contain` | dSanT — "ficou um tempinho e sumiu o painel de cima dnv" |
+| 2026-11-09 | `web_ui.py` | Chat nunca respondia: `/api/chat` sempre foi `StreamingResponse(media_type="text/plain")` (markdown puro, sem envelope), mas o JS esperava formato SSE/JSON estilo OpenAI (`data: {...}` com `delta.content`) — nunca bateu, bolha ficava vazia sem erro. Parser trocado pra só decodificar e acrescentar o texto puro, igual o servidor sempre mandou | dSanT — "Nao mw responde mas ta conectado" |
 
 ---
 

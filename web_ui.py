@@ -910,30 +910,21 @@ async function sendMessage() {
       return;
     }
 
+    // /api/chat é StreamingResponse(media_type="text/plain") — o
+    // servidor manda MARKDOWN PURO, chunk por chunk, sem envelope
+    // nenhum (nada de "data: {...}" nem JSON). A versão anterior
+    // deste JS esperava formato SSE estilo OpenAI (delta.content em
+    // JSON), que nunca bateu com o que o servidor realmente manda —
+    // por isso a bolha ficava sempre vazia, sem erro nenhum.
     const reader = r.body.getReader();
     const decoder = new TextDecoder();
-    let buf = '';
 
     while (true) {
       const {value, done} = await reader.read();
       if (done) break;
-      buf += decoder.decode(value, {stream: true});
-      const lines = buf.split('\n');
-      buf = lines.pop();
-      for (const line of lines) {
-        if (!line.startsWith('data:')) continue;
-        const raw = line.slice(5).trim();
-        if (raw === '[DONE]') break;
-        try {
-          const obj = JSON.parse(raw);
-          const delta = obj?.choices?.[0]?.delta?.content || '';
-          if (delta) {
-            fullText += delta;
-            bubble.innerHTML = mdToHtml(fullText);
-            chatArea.scrollTop = chatArea.scrollHeight;
-          }
-        } catch {}
-      }
+      fullText += decoder.decode(value, {stream: true});
+      bubble.innerHTML = mdToHtml(fullText);
+      chatArea.scrollTop = chatArea.scrollHeight;
     }
   } catch(e) {
     bubble.innerHTML = `<span style="color:var(--red)">⚠ Erro de rede: ${escHtml(e.message)}</span>`;
