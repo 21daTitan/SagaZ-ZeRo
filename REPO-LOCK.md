@@ -88,7 +88,7 @@ LICENSE (se existir)
 | HooLeeSh33t v0.1 | `6c1d652` | 2026-11-09 | Personas SagaZ/ZeRo, instaladores desktop, guia Android, esta trava |
 | HooLeeSh33t v0.2 | `3f08055` | 2026-11-09 | `deploy-vps.sh`: deploy permanente em VPS (systemd + proxy autenticado) |
 | HooLeeSh33t v0.3 | `e562dde` | 2026-11-09 | Acesso sem senha (opt-in pra religar), histórico visível ao voltar (exceção autorizada em `web_ui.py`) |
-| HooLeeSh33t v0.4 | *(este commit)* | 2026-11-09 | Conserto da interface Web: provider/modelo, status, shell e "forçar API" (exceção autorizada em `web_ui.py`, só na `HTML_CONTENT`) |
+| HooLeeSh33t v0.4 | `4bb27ed` | 2026-11-09 | Conserto da interface Web: provider/modelo, status, shell e "forçar API" (exceção autorizada em `web_ui.py`, só na `HTML_CONTENT`) |
 
 ---
 
