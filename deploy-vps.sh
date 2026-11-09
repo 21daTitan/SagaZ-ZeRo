@@ -121,14 +121,24 @@ elif [ -d /etc/iptables ]; then
 fi
 
 # ── 8. Proxy autenticado (nginx + basic auth) ────────────────
-if [ ! -f /etc/nginx/.sagaz_htpasswd ]; then
+if [ ! -s /etc/nginx/.sagaz_htpasswd ]; then
   echo ""
   echo "→ Define um usuário e senha pra proteger o acesso público:"
   read -rp "   Usuário: " AUTH_USER
-  htpasswd -c /etc/nginx/.sagaz_htpasswd "$AUTH_USER"
+  # Tenta até acertar — se as duas senhas digitadas não baterem,
+  # htpasswd falha e pedimos de novo em vez de abortar o deploy inteiro.
+  until htpasswd -c /etc/nginx/.sagaz_htpasswd "$AUTH_USER"; do
+    echo "  Não bateu, tenta de novo (as duas senhas digitadas precisam ser iguais)."
+  done
 else
   echo "→ Login já configurado (pra trocar depois: htpasswd /etc/nginx/.sagaz_htpasswd <usuario>)"
 fi
+
+# Remove o site padrão do nginx — ele escuta na porta 80 por padrão,
+# e se já tiver outra coisa (Traefik, por exemplo) usando a 80 nessa
+# VPS, isso derruba o nginx inteiro antes de chegar na nossa porta
+# (8888), que é a única que a gente realmente usa aqui.
+rm -f /etc/nginx/sites-enabled/default
 
 cat > /etc/nginx/sites-available/sagaz-zero << EOF
 server {
@@ -152,7 +162,11 @@ EOF
 
 ln -sf /etc/nginx/sites-available/sagaz-zero /etc/nginx/sites-enabled/sagaz-zero
 nginx -t
-systemctl reload nginx 2>/dev/null || systemctl restart nginx
+systemctl restart nginx
+systemctl is-active --quiet nginx && echo "→ nginx ativo." || {
+  echo "✗ nginx não subiu. Veja: journalctl -xeu nginx.service -n 30 --no-pager"
+  exit 1
+}
 
 PUBLIC_IP=$(curl -fsSL -4 ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}')
 
