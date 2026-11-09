@@ -40,6 +40,11 @@ apt-get update -qq
 apt-get install -y -qq python3 python3-venv python3-pip git nginx apache2-utils curl
 
 # ── 2. Clona ou atualiza o repositório ──────────────────────
+# (git recusa operar numa pasta que não é "dele" por padrão —
+#  isso é esperado quando a pasta já existia de uma tentativa
+#  anterior. Autoriza explicitamente este diretório.)
+git config --global --add safe.directory "$INSTALL_DIR" 2>/dev/null || true
+
 if [ -d "${INSTALL_DIR}/.git" ]; then
   echo "→ Repositório já existe em ${INSTALL_DIR}, atualizando..."
   cd "$INSTALL_DIR"
