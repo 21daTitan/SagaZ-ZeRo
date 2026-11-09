@@ -43,6 +43,7 @@ from agent import (
 try:
     from cassandra.client import (
         AllProvidersExhausted,
+        CassandraClient,
         ProviderError,
         load_credentials,
     )
@@ -85,6 +86,28 @@ def _active_credentials():
     if RUNTIME_CREDENTIALS:
         return list(RUNTIME_CREDENTIALS)
     return load_credentials() if CORE_OK else []
+
+
+def _sync_client_credentials():
+    """
+    HooLeeSh33t v0.4 — conserto de bug de ORIGEM (já existia igual no
+    Cassandra original, não foi coisa do rebrand).
+
+    `Agent.client` (agent.py) monta o cliente só com `_load_credentials()`,
+    que lê o .env. A chave colada em ⚙ CONFIGURAR API ia só pra
+    RUNTIME_CREDENTIALS — a tela usava isso pra mostrar "OpenAI (1)" e
+    pra passar na checagem de "tem chave?", mas o cliente que chama o
+    provedor de verdade nunca recebia essa chave. Resultado: tela dizendo
+    que tem credencial, servidor respondendo "Nenhuma credencial
+    configurada".
+
+    Aqui, se houver chave da interface e o cliente ainda não existir (ou
+    foi descartado por clear_session), ele é montado com ELA. Sem chave
+    na interface, nada muda: o Agent segue montando com o .env, como
+    sempre. agent.py continua intocado.
+    """
+    if RUNTIME_CREDENTIALS and agent._client is None:
+        agent._client = CassandraClient(list(RUNTIME_CREDENTIALS))
 
 
 HTML_CONTENT = r"""
@@ -1029,7 +1052,10 @@ class CredentialRequest(BaseModel):
 
 @app.get("/")
 async def get_index():
-    return HTMLResponse(content=HTML_CONTENT)
+    # no-store: o navegador sempre busca a página nova. Sem isso o
+    # celular podia continuar rodando o JavaScript de antes de um
+    # deploy (aconteceu: bolha vazia mesmo com o servidor já corrigido).
+    return HTMLResponse(content=HTML_CONTENT, headers={"Cache-Control": "no-store"})
 
 
 @app.get("/api/providers")
@@ -1197,8 +1223,11 @@ async def set_credentials(req: CredentialRequest):
             label=provider.label,
         )
     ]
-    # Recria o cliente para pegar a nova credencial.
+    # Recria o cliente para pegar a nova credencial. (Antes só descartava
+    # o cliente, e o novo era montado do .env — a chave da tela nunca
+    # chegava nele. Ver _sync_client_credentials.)
     agent.clear_session()
+    _sync_client_credentials()
 
     return {
         "success": True,
@@ -1232,6 +1261,9 @@ async def chat_endpoint(req: ChatRequest, request: Request):
                 "> O provedor é detectado automaticamente pelo formato da chave.\n"
             )
         return StreamingResponse(no_key_gen(), media_type="text/plain")
+
+    # Garante que a chave da interface (se houver) é a que o cliente usa.
+    _sync_client_credentials()
 
     # Override de provedor por requisição (seletor da UI).
     #

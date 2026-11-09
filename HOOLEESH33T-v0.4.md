@@ -200,6 +200,44 @@ tudo "conectado".
 e acrescenta direto ao texto da resposta — sem procurar por `data:`,
 sem fazer `JSON.parse`. É exatamente o que o servidor sempre mandou.
 
+## Correção adicional: a chave do "CONFIGURAR API" nunca chegava no cliente
+
+Teste direto na VPS (curl em `/api/chat`, sem navegador no meio)
+mostrou o servidor respondendo **"Provedores esgotados: Nenhuma
+credencial configurada"** — enquanto a tela mostrava **"OpenAI (1)"**.
+
+Causa raiz, e **bug de origem** (o Cassandra original tem exatamente
+o mesmo código, conferido): a chave colada em ⚙ CONFIGURAR API vai
+pra `RUNTIME_CREDENTIALS`, no `web_ui.py`. A tela usa isso pra contar
+"(1)" e pra passar na checagem de "tem chave?". Mas o cliente que
+chama o provedor de verdade é o `Agent.client`, em `agent.py`, que é
+montado **só** com `_load_credentials()` — ou seja, só com o `.env`.
+O `/api/credentials` chamava `agent.clear_session()` com o comentário
+"recria o cliente para pegar a nova credencial", só que o cliente
+recriado lia o `.env` de novo. **A chave da interface nunca foi usada
+por ninguém.** Só funcionava pra quem também tinha a chave no `.env`.
+
+**Fix (só no `web_ui.py`, `agent.py` continua intocado):** nova
+função `_sync_client_credentials()` — se tiver chave da interface e o
+cliente ainda não existir, monta o cliente com `CassandraClient(chave
+da interface)`. É chamada no começo de cada `/api/chat` e logo depois
+de salvar a chave. Sem chave na interface, nada muda: segue o `.env`.
+
+Testado localmente: antes, `has_credentials = False` mesmo com chave
+na interface; depois, `True` com o provedor certo.
+
+**Também:** a página principal (`GET /`) agora responde com
+`Cache-Control: no-store`. A bolha vazia no celular depois do conserto
+do stream era o navegador ainda rodando o JavaScript antigo, de antes
+do deploy. Com `no-store` ele sempre busca a página nova.
+
+**Limitação que continua (por design do original):** a chave colada
+na interface fica **só em memória**, nunca vai pro disco. Todo
+`systemctl restart` (e todo deploy) apaga ela, e precisa colar de
+novo. Pra uma VPS ligada 24/7 o jeito permanente é colocar a chave
+no `/opt/sagaz-zero/.env` (o `deploy-vps.sh` nunca sobrescreve esse
+arquivo).
+
 ---
 
 ## O que NÃO foi tocado além do registrado
