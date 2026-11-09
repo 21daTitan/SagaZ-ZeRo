@@ -24,6 +24,10 @@ APP_PORT="8080"
 PUBLIC_PORT="8888"
 SERVICE_NAME="sagaz-zero"
 SERVICE_USER="sagaz-zero"
+# Login/senha no proxy público. Padrão: DESLIGADO (acesso direto,
+# sem pedir nada) — a pedido explícito do dSanT. Pra religar depois:
+#   SAGAZ_ZERO_REQUIRE_AUTH=1 bash <(curl -fsSL .../deploy-vps.sh)
+REQUIRE_AUTH="${SAGAZ_ZERO_REQUIRE_AUTH:-0}"
 
 if [ "$EUID" -ne 0 ]; then
   echo "✗ Roda como root (ou com sudo)."
@@ -120,18 +124,23 @@ elif [ -d /etc/iptables ]; then
   iptables-save > /etc/iptables/rules.v4 2>/dev/null || true
 fi
 
-# ── 8. Proxy autenticado (nginx + basic auth) ────────────────
-if [ ! -s /etc/nginx/.sagaz_htpasswd ]; then
-  echo ""
-  echo "→ Define um usuário e senha pra proteger o acesso público:"
-  read -rp "   Usuário: " AUTH_USER
-  # Tenta até acertar — se as duas senhas digitadas não baterem,
-  # htpasswd falha e pedimos de novo em vez de abortar o deploy inteiro.
-  until htpasswd -c /etc/nginx/.sagaz_htpasswd "$AUTH_USER"; do
-    echo "  Não bateu, tenta de novo (as duas senhas digitadas precisam ser iguais)."
-  done
+# ── 8. Proxy público (nginx) — com ou sem login, conforme REQUIRE_AUTH ──
+AUTH_BLOCK=""
+if [ "$REQUIRE_AUTH" = "1" ]; then
+  if [ ! -s /etc/nginx/.sagaz_htpasswd ]; then
+    echo ""
+    echo "→ Define um usuário e senha pra proteger o acesso público:"
+    read -rp "   Usuário: " AUTH_USER
+    until htpasswd -c /etc/nginx/.sagaz_htpasswd "$AUTH_USER"; do
+      echo "  Não bateu, tenta de novo (as duas senhas digitadas precisam ser iguais)."
+    done
+  else
+    echo "→ Login já configurado (pra trocar depois: htpasswd /etc/nginx/.sagaz_htpasswd <usuario>)"
+  fi
+  AUTH_BLOCK=$'    auth_basic "SagaZ-ZeRo — HooLeeSh33t EdiTioN";\n    auth_basic_user_file /etc/nginx/.sagaz_htpasswd;'
 else
-  echo "→ Login já configurado (pra trocar depois: htpasswd /etc/nginx/.sagaz_htpasswd <usuario>)"
+  echo "→ Acesso direto, sem login (REQUIRE_AUTH=0) — exposto a qualquer um com o link."
+  rm -f /etc/nginx/.sagaz_htpasswd 2>/dev/null || true
 fi
 
 # Remove o site padrão do nginx — ele escuta na porta 80 por padrão,
@@ -145,8 +154,7 @@ server {
     listen ${PUBLIC_PORT};
     server_name _;
 
-    auth_basic "SagaZ-ZeRo — HooLeeSh33t EdiTioN";
-    auth_basic_user_file /etc/nginx/.sagaz_htpasswd;
+${AUTH_BLOCK}
 
     location / {
         proxy_pass http://127.0.0.1:${APP_PORT};
@@ -176,11 +184,20 @@ echo ""
 echo "   Acesse de QUALQUER rede (wifi, dados móveis, o que for):"
 echo "   http://${PUBLIC_IP}:${PUBLIC_PORT}"
 echo ""
-echo "   Login: o usuário/senha que você definiu agora."
+if [ "$REQUIRE_AUTH" = "1" ]; then
+  echo "   Login: o usuário/senha que você definiu agora."
+else
+  echo "   Sem login — entra direto. QUALQUER UM com esse link também entra."
+  echo "   Pra ligar a senha depois: SAGAZ_ZERO_REQUIRE_AUTH=1 bash <(curl -fsSL .../deploy-vps.sh)"
+fi
 echo ""
 echo "   ⚠️  O botão de shell na interface, se você ligar, executa"
 echo "      comandos como o usuário '${SERVICE_USER}' (sem root)."
-echo "      Quem tem a senha de login tem esse poder — guarda bem."
+if [ "$REQUIRE_AUTH" = "1" ]; then
+  echo "      Quem tem a senha de login tem esse poder — guarda bem."
+else
+  echo "      Sem login, QUALQUER UM com o link tem esse poder."
+fi
 echo ""
 echo "   Pra atualizar depois (puxa do GitHub e reinicia sozinho):"
 echo "   bash <(curl -fsSL https://raw.githubusercontent.com/21daTitan/SagaZ-ZeRo/main/deploy-vps.sh)"
