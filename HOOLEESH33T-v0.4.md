@@ -1,0 +1,100 @@
+# ⬡⬢ HooLeeSh33t v0.4 — Conserto da interface Web
+
+**Status:** Lançado
+**Base travada:** commit da v0.3 (ver [`REPO-LOCK.md`](REPO-LOCK.md))
+**Regra:** uma edição em arquivo travado nesta versão, **explicitamente
+autorizada pelo dSanT** no chat, registrada na tabela de exceções do
+`REPO-LOCK.md`.
+
+---
+
+## Por que essa versão existe
+
+A versão web tava feia e quebrada de verdade: provider e modelo
+mostrando `[object Object]` repetido, layout torto, e funcionalidade
+que existia na Cassandra original (forçar provider/base_url/modelo,
+badges de status) tinha ficado pelo caminho na reescrita visual
+Matrix cyan. Reportado direto: *"a interface tá uma merda... fiquei
+até triste"*. Com razão — essa versão conserta os bugs reais, não só
+o sintoma.
+
+## O que estava quebrado, de fato (causa raiz)
+
+1. **`[object Object]` no PROVIDER e no MODELO.**
+   `provider_catalog()` (em `cassandra/providers.py`, núcleo
+   preservado) devolve uma **lista de objetos**
+   (`{key, label, base_url, default_model, models, ...}`) — nunca
+   devolveu strings. O JS da reescrita anterior assumia string pura
+   (`new Option(p, p)`), e todo objeto virava a string literal
+   `"[object Object]"` ao ser colocado num `<option>`. Isso também
+   explica os ~10 itens duplicados no seletor nativo do Android: eram
+   os ~10 provedores do catálogo, todos estourando pro mesmo texto
+   inútil.
+
+2. **Dropdown de modelo ficava vazio sem motivo aparente.**
+   `/api/models` (que consulta `GET /v1/models` de verdade na conta)
+   **ignora qualquer parâmetro de provider na URL** — ele só responde
+   pela credencial ativa no momento. A reescrita anterior chamava
+   esse endpoint toda vez que o PROVIDER mudava, mesmo sem nenhuma
+   credencial configurada ainda, e sempre voltava vazio. O catálogo
+   local (que já tem a lista de modelos de cada provider, estática)
+   nunca era usado pra popular a tela — só pra decorar o resultado da
+   API depois.
+
+3. **Toggle de SHELL e os badges de status nunca atualizavam.**
+   O servidor sempre devolveu o campo `allow_shell` (em
+   `/api/shell/toggle` e `/api/status`). O JS da reescrita anterior
+   lia um campo chamado `shell_enabled`, que **nunca existiu** — então
+   todo resultado vinha `undefined`, e nada na tela refletia o estado
+   real. Pelo mesmo motivo, os badges de cifrado/sanitizado/
+   anti-recusa que existiam na Cassandra original simplesmente
+   desapareceram: a tela nunca lia os campos `encrypt`/`sanitize`/
+   `guard` que `/api/status` sempre devolveu.
+
+4. **"Forçar API" não existia de verdade.**
+   O botão de salvar credenciais mandava `base_url: null` quando o
+   campo ficava vazio (o backend espera string, não `null`) e nunca
+   mandava `model` nenhum — ou seja, não tinha como forçar um modelo
+   específico via essa tela, só a chave e (as vezes) o provider.
+
+## O que mudou (só dentro de `HTML_CONTENT`, em `web_ui.py`)
+
+- PROVIDER e MODELO agora usam `p.key`/`p.label` corretamente — sem
+  stringificar objeto.
+- Seletor de MODELO é populado a partir do **catálogo local**
+  (sempre disponível, mesmo sem credencial) e depois **enriquecido**
+  com a lista real da conta (`/api/models`) quando já existe
+  credencial ativa — sem nunca ficar vazio à toa.
+- Campo novo **"forçar modelo"** na barra: digitou ali, esse valor
+  passa por cima da seleção do dropdown ao enviar mensagem.
+- Modal **⚙ CONFIGURAR API** ganhou campo de **MODELO** (além de
+  provider e base URL) — agora dá pra forçar os três: provider,
+  endpoint e modelo, igual a Cassandra original permitia.
+- Toggle de SHELL e badges de status (**PROVIDER ativo + nº de
+  credenciais, cifrado, sanitizado, anti-recusa**) lêem os campos
+  reais que o servidor sempre devolveu (`allow_shell`, `encrypt`,
+  `sanitize`, `guard`, `provider_label`, `credentials`) — voltam a
+  bater com a realidade.
+- Barra reorganizada em duas linhas (seletores / badges) pra não
+  espremer tudo numa linha só no mobile.
+- Botões renomeados pra bater com a nomenclatura da Cassandra
+  original: **"LIMPAR SESSÃO"** e **"SALVAR / FORÇAR API"**.
+
+**Nenhuma rota de backend foi tocada** — `/api/providers`,
+`/api/models`, `/api/status`, `/api/shell/toggle`, `/api/credentials`,
+`/api/clear`, `/api/chat` continuam exatamente como estavam. O
+problema inteiro era de leitura/escrita incorreta desses dados no
+front-end que eu tinha reescrito do zero sem conferir o formato real
+contra o backend e contra a interface original — essa versão corrige
+isso.
+
+---
+
+## O que NÃO foi tocado além do registrado
+
+Tudo mais continua como estava. Só a `HTML_CONTENT` dentro de
+`web_ui.py`, pelos motivos acima.
+
+---
+
+Ordem e Progresso. 🤙

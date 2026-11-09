@@ -250,6 +250,14 @@ bash <(curl -fsSL https://raw.githubusercontent.com/21daTitan/SagaZ-ZeRo/main/de
 
 Sobe um serviço systemd com proxy autenticado na frente. Detalhes e notas de segurança em [`HOOLEESH33T-v0.2.md`](HOOLEESH33T-v0.2.md).
 
+## 🆕 HooLeeSh33t v0.4 — Conserto da interface Web
+
+Provider e modelo mostrando `[object Object]`, status de shell/cifrado/
+sanitizado/anti-recusa sem atualizar, e sem jeito de forçar provider/
+base_url/modelo manualmente — tudo bug de leitura de dados no front-end,
+não do núcleo. Causa raiz, conserto e o que mudou em
+[`HOOLEESH33T-v0.4.md`](HOOLEESH33T-v0.4.md).
+
 ---
 
 <div align="center">

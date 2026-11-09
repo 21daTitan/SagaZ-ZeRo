@@ -184,25 +184,40 @@ HTML_CONTENT = r"""
 
   /* ── PROVIDER BAR ── */
   #provider-bar {
-    display: flex; align-items: center; gap: 8px;
+    display: flex; flex-direction: column; gap: 6px;
     padding: 7px 0 5px;
     border-bottom: 1px solid rgba(0,245,255,0.1);
-    flex-wrap: wrap;
   }
+  .bar-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .bar-label { font-size: 11px; color: var(--text-dim); white-space: nowrap; }
   select, input[type=text], input[type=password] {
     background: var(--bg2); border: 1px solid var(--cyan-border);
     color: var(--text); font-family: var(--font-mono); font-size: 12px;
     padding: 5px 8px; border-radius: var(--radius);
     outline: none; transition: border-color .2s, box-shadow .2s;
+    height: 30px; line-height: 18px;
   }
   select:focus, input:focus {
     border-color: var(--cyan);
     box-shadow: 0 0 8px var(--cyan-glow);
   }
-  #provider-select { min-width: 130px; }
-  #model-select { min-width: 180px; flex: 1; max-width: 300px; }
+  #provider-select { min-width: 130px; max-width: 170px; }
+  #model-select { min-width: 150px; flex: 1; max-width: 260px; }
+  .force-input {
+    border-style: dashed; border-color: var(--yellow); color: var(--yellow);
+    min-width: 150px; flex: 1; max-width: 220px; font-size: 11px;
+  }
+  .force-input::placeholder { color: rgba(255,214,10,0.55); }
   .bar-sep { width: 1px; height: 20px; background: var(--cyan-border); }
+  /* ── PILLS DE STATUS (provider ativo, shell, cifrado/sanitizado/anti-recusa) ── */
+  .pill {
+    font-size: 10px; padding: 3px 9px; border-radius: 12px;
+    border: 1px solid var(--cyan-border); color: var(--text-dim);
+    white-space: nowrap; background: var(--bg2);
+  }
+  .pill.on   { color: var(--green);  border-color: var(--green); }
+  .pill.off  { color: var(--red);    border-color: var(--red); }
+  .pill.warn { color: var(--yellow); border-color: var(--yellow); }
 
   /* ── CHAT AREA ── */
   #chat-area {
@@ -379,8 +394,7 @@ HTML_CONTENT = r"""
 
   /* ── RESPONSIVE ── */
   @media(max-width:600px) {
-    #provider-bar { flex-direction: column; align-items: flex-start; }
-    #model-select { max-width: 100%; width: 100%; }
+    #model-select, .force-input { max-width: 100%; width: 100%; }
     .bar-sep { display: none; }
     .modal-box { padding: 16px; }
   }
@@ -402,30 +416,38 @@ HTML_CONTENT = r"""
     <div class="header-right">
       <span class="status-dot" id="status-dot"></span>
       <span class="status-label" id="status-label">conectando...</span>
-      <button id="btn-settings" title="Configurações">⚙</button>
+      <button id="btn-settings" title="Configurar API">⚙</button>
     </div>
   </header>
 
   <!-- PROVIDER BAR -->
   <div id="provider-bar">
-    <span class="bar-label">PROVIDER</span>
-    <select id="provider-select"><option value="">carregando...</option></select>
-    <div class="bar-sep"></div>
-    <span class="bar-label">MODELO</span>
-    <select id="model-select"><option value="">—</option></select>
-    <div class="bar-sep"></div>
-    <span class="bar-label" id="shell-label">SHELL</span>
-    <label class="toggle" title="Executar comandos de shell retornados pela API">
-      <input type="checkbox" id="shell-toggle">
-      <span class="toggle-slider"></span>
-    </label>
-    <span class="bar-label" id="shell-status-text" style="font-size:10px;color:var(--red);">OFF</span>
+    <div class="bar-row">
+      <span class="bar-label">PROVIDER</span>
+      <select id="provider-select"><option value="">carregando...</option></select>
+      <span class="bar-label">MODELO</span>
+      <select id="model-select"><option value="">—</option></select>
+      <input type="text" id="model-override-input" class="force-input"
+             placeholder="forçar modelo (opcional)"
+             title="Preenchido aqui, este valor passa por cima do modelo selecionado acima — use pra forçar um modelo fora do catálogo.">
+    </div>
+    <div class="bar-row">
+      <span class="pill" id="pill-provider">— nenhuma credencial —</span>
+      <label class="toggle" title="Executar comandos de shell retornados pela API">
+        <input type="checkbox" id="shell-toggle">
+        <span class="toggle-slider"></span>
+      </label>
+      <span class="pill off" id="pill-shell">SHELL OFF</span>
+      <span class="pill" id="pill-encrypt">cifrado: —</span>
+      <span class="pill" id="pill-sanitize">sanitizado: —</span>
+      <span class="pill" id="pill-guard">anti-recusa: —</span>
+    </div>
   </div>
 
   <!-- CHAT AREA -->
   <div id="chat-area">
     <div class="msg-system">▸ SagaZ-ZeRo HooLeeSh33t EdiTioN inicializado · Base: Evil Cassandra por Mörlsara</div>
-    <div class="msg-system">▸ Adicione sua chave API em ⚙ Configurações para começar</div>
+    <div class="msg-system">▸ Adicione sua chave API em ⚙ CONFIGURAR API para começar</div>
   </div>
 
   <!-- INPUT AREA -->
@@ -441,26 +463,36 @@ HTML_CONTENT = r"""
 <!-- SETTINGS MODAL -->
 <div id="settings-modal">
   <div class="modal-box">
-    <div class="modal-title">⚙ CONFIGURAÇÕES — SagaZ-ZeRo</div>
+    <div class="modal-title">⚙ CONFIGURAR API — SagaZ-ZeRo</div>
+    <p style="font-size:11px;color:var(--text-dim);margin-bottom:14px;line-height:1.5;">
+      Cole sua chave BYOK. O provider é auto-detectado pelo formato da chave,
+      mas pode ser forçado manualmente aqui — assim como a Base URL e o
+      Modelo, pra quando precisar apontar pra um endpoint ou modelo fora
+      do catálogo padrão.
+    </p>
 
     <div class="modal-row">
       <label>CHAVE API (BYOK)</label>
       <input type="password" id="api-key-input" placeholder="sk-... ou equivalente">
     </div>
     <div class="modal-row">
-      <label>BASE URL (opcional)</label>
+      <label>PROVIDER (auto-detect, ou force aqui)</label>
+      <select id="cred-provider-select"><option value="">— auto-detectar pela chave —</option></select>
+    </div>
+    <div class="modal-row">
+      <label>BASE URL (opcional — força endpoint custom)</label>
       <input type="text" id="base-url-input" placeholder="https://api.openai.com/v1">
     </div>
     <div class="modal-row">
-      <label>PROVIDER</label>
-      <select id="cred-provider-select"></select>
+      <label>MODELO (opcional — força modelo específico)</label>
+      <input type="text" id="cred-model-input" placeholder="ex: gpt-4o, deepseek-chat...">
     </div>
     <div class="cred-status" id="cred-status"></div>
 
     <div class="modal-actions">
-      <button class="btn-secondary" id="btn-clear-chat">🗑 Limpar Chat</button>
+      <button class="btn-secondary" id="btn-clear-chat">🗑 LIMPAR SESSÃO</button>
       <button class="btn-secondary" id="btn-close-modal">Fechar</button>
-      <button class="btn-primary" id="btn-save-creds">Salvar Credenciais</button>
+      <button class="btn-primary" id="btn-save-creds">💾 SALVAR / FORÇAR API</button>
     </div>
   </div>
 </div>
@@ -531,14 +563,20 @@ const userInput      = document.getElementById('user-input');
 const btnSend        = document.getElementById('btn-send');
 const providerSel    = document.getElementById('provider-select');
 const modelSel       = document.getElementById('model-select');
+const modelOverride  = document.getElementById('model-override-input');
 const shellToggle    = document.getElementById('shell-toggle');
-const shellStatusTxt = document.getElementById('shell-status-text');
+const pillProvider   = document.getElementById('pill-provider');
+const pillShell      = document.getElementById('pill-shell');
+const pillEncrypt    = document.getElementById('pill-encrypt');
+const pillSanitize   = document.getElementById('pill-sanitize');
+const pillGuard      = document.getElementById('pill-guard');
 const statusDot      = document.getElementById('status-dot');
 const statusLabel    = document.getElementById('status-label');
 const btnSettings    = document.getElementById('btn-settings');
 const settingsModal  = document.getElementById('settings-modal');
 const apiKeyInput    = document.getElementById('api-key-input');
 const baseUrlInput   = document.getElementById('base-url-input');
+const credModelInput = document.getElementById('cred-model-input');
 const credProvSel    = document.getElementById('cred-provider-select');
 const credStatus     = document.getElementById('cred-status');
 const btnSaveCreds   = document.getElementById('btn-save-creds');
@@ -601,22 +639,31 @@ function appendSystem(text) {
 
 // ═══════════════════════════════════════════════════════════
 //  PROVIDERS & MODELS
+//  provider_catalog() (cassandra/providers.py) devolve uma LISTA DE
+//  OBJETOS — {key, label, base_url, default_model, models, env_var,
+//  notes, detectable, context_window} — não strings. Era isso que
+//  virava "[object Object]" na versão anterior desta interface.
 // ═══════════════════════════════════════════════════════════
+let providerCatalog = {};  // key -> objeto do catálogo
+
 async function loadProviders() {
   try {
     const r = await fetch('/api/providers');
     if (!r.ok) throw new Error(r.status);
     const data = await r.json();
     const providers = data.providers || [];
+    providerCatalog = {};
     providerSel.innerHTML = '';
-    credProvSel.innerHTML = '';
+    credProvSel.innerHTML = '<option value="">— auto-detectar pela chave —</option>';
     providers.forEach(p => {
-      const o1 = new Option(p, p); providerSel.add(o1);
-      const o2 = new Option(p, p); credProvSel.add(o2);
+      providerCatalog[p.key] = p;
+      providerSel.add(new Option(p.label, p.key));
+      credProvSel.add(new Option(p.label, p.key));
     });
     if (providers.length) {
-      state.provider = providers[0];
-      await loadModels(state.provider);
+      state.provider = providers[0].key;
+      providerSel.value = state.provider;
+      loadModelsFromCatalog(state.provider);
     }
     setStatus(true);
   } catch(e) {
@@ -625,42 +672,72 @@ async function loadProviders() {
   }
 }
 
-async function loadModels(provider) {
-  modelSel.innerHTML = '<option>carregando...</option>';
+// Popula o seletor de modelo a partir do catálogo LOCAL — sempre
+// disponível, mesmo sem credencial ativa ainda, porque é isso que o
+// provedor realmente oferece (cassandra/providers.py). Se já existir
+// credencial configurada, refreshModelsFromAPI() enriquece depois
+// com a lista de verdade da conta.
+function loadModelsFromCatalog(providerKey) {
+  const p = providerCatalog[providerKey];
+  modelSel.innerHTML = '';
+  if (!p || !p.models || !p.models.length) {
+    modelSel.add(new Option('— sem catálogo, use "forçar modelo" —', ''));
+    state.model = '';
+    return;
+  }
+  p.models.forEach(m => modelSel.add(new Option(m, m)));
+  state.model = p.default_model || p.models[0];
+  modelSel.value = state.model;
+}
+
+// Consulta os modelos REALMENTE disponíveis pra credencial ativa
+// (GET /v1/models do provedor, via /api/models). Só funciona depois
+// de salvar uma chave em ⚙ CONFIGURAR API — antes disso não há
+// credencial pra consultar, e o catálogo local acima já cobre o uso.
+async function refreshModelsFromAPI() {
   try {
-    const r = await fetch(`/api/models?provider=${encodeURIComponent(provider)}`);
+    const r = await fetch('/api/models');
     const data = await r.json();
-    const models = data.models || [];
+    if (!data.models || !data.models.length) return;
+    const current = modelSel.value;
     modelSel.innerHTML = '';
-    models.forEach(m => { modelSel.add(new Option(m, m)); });
-    state.model = models[0] || '';
-  } catch(e) {
-    modelSel.innerHTML = '<option>erro</option>';
+    data.models.forEach(m => {
+      const label = m.context_window ? `${m.id}  (${Math.round(m.context_window/1000)}k)` : m.id;
+      modelSel.add(new Option(label, m.id));
+    });
+    const stillThere = data.models.some(m => m.id === current);
+    state.model = stillThere ? current : data.models[0].id;
+    modelSel.value = state.model;
+  } catch {
+    // Sem credencial ativa ou provedor sem /v1/models — mantém o catálogo local.
   }
 }
 
 providerSel.addEventListener('change', () => {
   state.provider = providerSel.value;
-  loadModels(state.provider);
+  loadModelsFromCatalog(state.provider);
 });
 modelSel.addEventListener('change', () => { state.model = modelSel.value; });
 
 // ═══════════════════════════════════════════════════════════
 //  SHELL TOGGLE
+//  O servidor devolve {"allow_shell": bool} em /api/shell/toggle e
+//  /api/status. A versão anterior lia "shell_enabled" (campo que não
+//  existe), por isso o badge nunca refletia o estado real.
 // ═══════════════════════════════════════════════════════════
+function paintShellPill(on) {
+  state.shellEnabled = on;
+  shellToggle.checked = on;
+  pillShell.textContent = on ? 'SHELL ATIVO ⚠️' : 'SHELL OFF';
+  pillShell.className = 'pill ' + (on ? 'warn' : 'off');
+}
+
 shellToggle.addEventListener('change', async () => {
-  const enabled = shellToggle.checked;
   try {
-    const r = await fetch('/api/shell/toggle', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({enabled})
-    });
+    const r = await fetch('/api/shell/toggle', {method: 'POST'});
     const data = await r.json();
-    state.shellEnabled = data.shell_enabled;
-    shellStatusTxt.textContent = state.shellEnabled ? 'ON' : 'OFF';
-    shellStatusTxt.style.color = state.shellEnabled ? 'var(--yellow)' : 'var(--red)';
-    appendSystem(`Shell ${state.shellEnabled ? 'ATIVADO ⚠️' : 'desativado'}`);
+    paintShellPill(!!data.allow_shell);
+    appendSystem(`Shell ${state.shellEnabled ? 'ATIVADO ⚠️ (comandos retornados pela API passam a executar)' : 'desativado'}`);
   } catch(e) {
     shellToggle.checked = state.shellEnabled;
   }
@@ -668,18 +745,31 @@ shellToggle.addEventListener('change', async () => {
 
 // ═══════════════════════════════════════════════════════════
 //  STATUS POLL
+//  /api/status devolve: allow_shell, provider, provider_label,
+//  credentials (contagem), encrypt, sanitize, guard, refusal_retries.
+//  A versão anterior só lia (errado) "shell_enabled" e ignorava o
+//  resto — por isso os badges de provider/cifrado/sanitizado/
+//  anti-recusa do Cassandra original tinham desaparecido aqui.
 // ═══════════════════════════════════════════════════════════
 async function checkStatus() {
   try {
     const r = await fetch('/api/status');
     const data = await r.json();
     setStatus(true);
-    if (data.shell_enabled !== state.shellEnabled) {
-      state.shellEnabled = data.shell_enabled;
-      shellToggle.checked = state.shellEnabled;
-      shellStatusTxt.textContent = state.shellEnabled ? 'ON' : 'OFF';
-      shellStatusTxt.style.color = state.shellEnabled ? 'var(--yellow)' : 'var(--red)';
-    }
+
+    paintShellPill(!!data.allow_shell);
+
+    pillProvider.textContent = data.credentials > 0
+      ? `${data.provider_label || data.provider || '?'} (${data.credentials})`
+      : '— nenhuma credencial, ⚙ pra configurar —';
+    pillProvider.className = 'pill ' + (data.credentials > 0 ? 'on' : '');
+
+    pillEncrypt.textContent  = 'cifrado: '     + (data.encrypt  ? 'sim' : 'não');
+    pillEncrypt.className    = 'pill ' + (data.encrypt  ? 'on' : '');
+    pillSanitize.textContent = 'sanitizado: '  + (data.sanitize ? 'sim' : 'não');
+    pillSanitize.className   = 'pill ' + (data.sanitize ? 'on' : '');
+    pillGuard.textContent    = 'anti-recusa: ' + (data.guard    ? 'sim' : 'não');
+    pillGuard.className      = 'pill ' + (data.guard    ? 'on' : '');
   } catch { setStatus(false); }
 }
 setInterval(checkStatus, 8000);
@@ -694,22 +784,36 @@ settingsModal.addEventListener('click', e => {
 });
 
 btnSaveCreds.addEventListener('click', async () => {
-  const key = apiKeyInput.value.trim();
-  const base = baseUrlInput.value.trim();
-  const prov = credProvSel.value;
+  const key   = apiKeyInput.value.trim();
+  const base  = baseUrlInput.value.trim();
+  const prov  = credProvSel.value;
+  const model = credModelInput.value.trim();
   if (!key) { credStatus.textContent = 'Informe a chave API.'; credStatus.className='cred-status err'; return; }
   credStatus.textContent = 'Salvando...'; credStatus.className='cred-status';
   try {
     const r = await fetch('/api/credentials', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({provider: prov, api_key: key, base_url: base || null})
+      // base_url/model SEMPRE string (nunca null) — o backend espera
+      // str, e mandar null quebrava a validação silenciosamente.
+      body: JSON.stringify({provider: prov, api_key: key, base_url: base, model: model})
     });
     const data = await r.json();
     if (data.success) {
-      credStatus.textContent = '✓ Credenciais salvas!'; credStatus.className='cred-status ok';
+      credStatus.textContent = '✓ ' + (data.message || 'Credenciais salvas!'); credStatus.className='cred-status ok';
       apiKeyInput.value = '';
-      appendSystem(`Credenciais do provedor "${prov}" configuradas.`);
+      appendSystem(data.message || 'Credenciais configuradas.');
+      if (data.provider) {
+        state.provider = data.provider;
+        providerSel.value = data.provider;
+        loadModelsFromCatalog(data.provider);
+      }
+      if (model) {
+        state.model = model;
+        modelOverride.value = model;
+      }
+      await refreshModelsFromAPI();
+      await checkStatus();
       setTimeout(() => settingsModal.classList.remove('open'), 1200);
     } else {
       credStatus.textContent = data.message || 'Erro desconhecido.'; credStatus.className='cred-status err';
@@ -724,7 +828,7 @@ btnClearChat.addEventListener('click', async () => {
     await fetch('/api/clear', {method:'POST'});
   } catch {}
   chatArea.innerHTML = '';
-  appendSystem('Histórico limpo.');
+  appendSystem('Sessão limpa.');
   settingsModal.classList.remove('open');
 });
 
@@ -747,13 +851,16 @@ async function sendMessage() {
   let fullText = '';
 
   try {
+    // "forçar modelo" (campo manual na barra) passa por cima do
+    // modelo selecionado no dropdown, se preenchido.
+    const forcedModel = modelOverride.value.trim();
     const r = await fetch('/api/chat', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({
         message: text,
         provider: state.provider || undefined,
-        model: state.model || undefined,
+        model: forcedModel || state.model || undefined,
       })
     });
 
@@ -837,10 +944,13 @@ async function loadHistory() {
 // ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
-loadProviders();
-checkStatus();
-loadHistory();
-userInput.focus();
+(async () => {
+  await loadProviders();
+  await checkStatus();
+  await refreshModelsFromAPI();  // enriquece com /v1/models se já houver credencial (.env)
+  await loadHistory();
+  userInput.focus();
+})();
 </script>
 </body>
 </html>

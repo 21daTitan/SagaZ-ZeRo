@@ -76,6 +76,7 @@ LICENSE (se existir)
 | Data | Arquivo | O que mudou | Autorizado por |
 |---|---|---|---|
 | 2026-11-09 | `web_ui.py` | Endpoint `GET /api/history` (expõe a `conversation` global já existente) + JS que redesenha o chat ao carregar a página | dSanT, pedido direto no chat — "quero que a memória fique pra quando eu voltar" |
+| 2026-11-09 | `web_ui.py` | Conserto da interface Web (só dentro de `HTML_CONTENT`, nenhuma rota de backend tocada): provider/modelo paravam de virar `[object Object]`, status de shell/cifrado/sanitizado/anti-recusa paravam de nunca atualizar, credenciais paravam de poder forçar provider/base_url/modelo | dSanT, pedido direto no chat — "a interface tá uma merda... corrija e atualize a interface" |
 
 ---
 
@@ -86,7 +87,8 @@ LICENSE (se existir)
 | Base (rebrand inicial) | `72920f2` | 2026-11-09 | Cassandra → SagaZ-ZeRo (nomes, cores, interface Matrix) |
 | HooLeeSh33t v0.1 | `6c1d652` | 2026-11-09 | Personas SagaZ/ZeRo, instaladores desktop, guia Android, esta trava |
 | HooLeeSh33t v0.2 | `3f08055` | 2026-11-09 | `deploy-vps.sh`: deploy permanente em VPS (systemd + proxy autenticado) |
-| HooLeeSh33t v0.3 | *(este commit)* | 2026-11-09 | Acesso sem senha (opt-in pra religar), histórico visível ao voltar (exceção autorizada em `web_ui.py`) |
+| HooLeeSh33t v0.3 | `e562dde` | 2026-11-09 | Acesso sem senha (opt-in pra religar), histórico visível ao voltar (exceção autorizada em `web_ui.py`) |
+| HooLeeSh33t v0.4 | *(este commit)* | 2026-11-09 | Conserto da interface Web: provider/modelo, status, shell e "forçar API" (exceção autorizada em `web_ui.py`, só na `HTML_CONTENT`) |
 
 ---
 
