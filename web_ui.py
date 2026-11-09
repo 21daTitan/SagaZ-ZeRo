@@ -524,32 +524,36 @@ HTML_CONTENT = r"""
   resize();
   window.addEventListener('resize', resize);
 
+  // HooLeeSh33t v0.4 — otimização de performance mobile: o "shadowBlur"
+  // por glifo, por coluna, a cada frame, era o maior custo de CPU/GPU
+  // da tela inteira (podia passar de 1000 operações de blur por
+  // segundo num celular). Removido — o brilho agora é só cor mais
+  // clara, sem blur. Também junta a troca de fonte (era 2x por coluna,
+  // agora é 2x por frame inteiro) e reduz o ritmo de 45ms pra 60ms.
   function draw() {
-    ctx.fillStyle = 'rgba(0,13,15,0.055)';
+    ctx.fillStyle = 'rgba(0,13,15,0.08)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Trilha (atrás, mais escura)
+    ctx.font = `${FONT_SIZE}px 'Courier New'`;
+    ctx.fillStyle = '#00838f';
+    for (let i = 0; i < cols; i++) {
+      const trailChar = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(trailChar, i * FONT_SIZE, drops[i] * FONT_SIZE - FONT_SIZE);
+    }
+
+    // Cabeça (na frente, mais clara)
+    ctx.font = `bold ${FONT_SIZE}px 'Courier New'`;
+    ctx.fillStyle = '#9bf5ff';
     for (let i = 0; i < cols; i++) {
       const char = chars[Math.floor(Math.random() * chars.length)];
       const y = drops[i] * FONT_SIZE;
-      // Head glow (bright)
-      ctx.font = `bold ${FONT_SIZE}px 'Courier New'`;
-      ctx.fillStyle = '#c8ffff';
-      ctx.shadowColor = '#00f5ff';
-      ctx.shadowBlur = 8;
       ctx.fillText(char, i * FONT_SIZE, y);
-      // Trail
-      const trailChar = chars[Math.floor(Math.random() * chars.length)];
-      ctx.font = `${FONT_SIZE}px 'Courier New'`;
-      ctx.fillStyle = '#00b8cc';
-      ctx.shadowColor = '#007a8a';
-      ctx.shadowBlur = 4;
-      ctx.fillText(trailChar, i * FONT_SIZE, y - FONT_SIZE);
-
-      ctx.shadowBlur = 0;
       if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
       drops[i] += 0.5 + Math.random() * 0.4;
     }
   }
-  setInterval(draw, 45);
+  setInterval(draw, 60);
 })();
 
 // ═══════════════════════════════════════════════════════════

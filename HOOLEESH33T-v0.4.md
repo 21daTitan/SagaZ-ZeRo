@@ -110,6 +110,23 @@ grid mal dimensionado, não os pills.
 **Fix:** `grid-template-rows: auto auto 1fr auto` — 4 linhas pros 4
 filhos, `1fr` agora cai certinho no `#chat-area`.
 
+## Correção adicional: travamento/lag na animação de fundo
+
+Depois do grid resolvido, sobrou reclamação de travamento geral na
+página no celular. Causa: a chuva Matrix no fundo (`<canvas>`) usava
+`ctx.shadowBlur` em **cada glifo, de cada coluna, a cada frame**
+(~22 FPS) — `shadowBlur` é uma das operações mais caras que existem
+em Canvas 2D, principalmente em GPUs de celular, e aqui rodava até
+mais de mil vezes por segundo sem parar, pra sempre, enquanto a
+página ficasse aberta.
+
+**Fix:** removido o `shadowBlur` por completo (o brilho da "cabeça"
+da chuva agora é só uma cor mais clara, sem blur), a troca de fonte
+foi agrupada (era 2x por coluna por frame, virou 2x por frame
+inteiro), e o ritmo caiu de 45ms pra 60ms por frame. Efeito visual
+continua o mesmo (chuva Matrix com cabeça clara e trilha escura),
+só sem o custo de GPU que tava travando a interface.
+
 ---
 
 ## O que NÃO foi tocado além do registrado
