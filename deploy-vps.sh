@@ -112,16 +112,33 @@ systemctl is-active --quiet "$SERVICE_NAME" && echo "→ Serviço ativo e rodand
 }
 
 # ── 7. Tranca a porta do app pra só aceitar conexão local ────
+# ORDEM IMPORTA: "iptables -I" sem número sempre insere no TOPO da
+# fila. Inserir ACCEPT e depois DROP faz o DROP ficar por cima do
+# ACCEPT — bloqueando TUDO, até o próprio localhost (bug real já
+# visto em produção). O jeito certo: insere o DROP primeiro (vai
+# pro topo), depois o ACCEPT (vai pro topo de novo, empurrando o
+# DROP pra baixo) — resultado final: ACCEPT checado ANTES do DROP.
 echo "→ Travando porta ${APP_PORT} pra acesso local apenas..."
-iptables -C INPUT -i lo -p tcp --dport "$APP_PORT" -j ACCEPT 2>/dev/null || \
-  iptables -I INPUT -i lo -p tcp --dport "$APP_PORT" -j ACCEPT
-iptables -C INPUT -p tcp --dport "$APP_PORT" -j DROP 2>/dev/null || \
-  iptables -I INPUT -p tcp --dport "$APP_PORT" -j DROP
+iptables -D INPUT -i lo -p tcp --dport "$APP_PORT" -j ACCEPT 2>/dev/null || true
+iptables -D INPUT -p tcp --dport "$APP_PORT" -j DROP 2>/dev/null || true
+iptables -I INPUT -p tcp --dport "$APP_PORT" -j DROP
+iptables -I INPUT -i lo -p tcp --dport "$APP_PORT" -j ACCEPT
 
 if command -v netfilter-persistent >/dev/null 2>&1; then
   netfilter-persistent save >/dev/null 2>&1 || true
 elif [ -d /etc/iptables ]; then
   iptables-save > /etc/iptables/rules.v4 2>/dev/null || true
+fi
+
+# Confirma de verdade que o próprio localhost ainda alcança a porta
+# — se isso falhar aqui, é bug de regra/ordem de firewall, não de
+# rede externa, e é melhor parar o deploy do que deixar passar.
+if ! curl -fsS -o /dev/null -m 5 "http://127.0.0.1:${APP_PORT}/"; then
+  echo "✗ A porta ${APP_PORT} ficou inacessível até pra localhost depois do"
+  echo "  firewall. Isso é bug de regra de iptables, não de rede. Rodando:"
+  echo "    iptables -L INPUT -n --line-numbers | grep ${APP_PORT}"
+  iptables -L INPUT -n --line-numbers | grep "$APP_PORT" || true
+  exit 1
 fi
 
 # ── 8. Proxy público (nginx) — com ou sem login, conforme REQUIRE_AUTH ──
