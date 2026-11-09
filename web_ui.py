@@ -811,10 +811,35 @@ userInput.addEventListener('keydown', e => {
 });
 
 // ═══════════════════════════════════════════════════════════
+//  HISTÓRICO (HooLeeSh33t v0.3 — adição autorizada por dSanT)
+//  O servidor já guarda a conversa em memória enquanto o
+//  processo roda. Isto só redesenha a tela com o que já existe
+//  ao abrir/voltar pra página — não inventa nada novo.
+// ═══════════════════════════════════════════════════════════
+async function loadHistory() {
+  try {
+    const r = await fetch('/api/history');
+    if (!r.ok) return;
+    const data = await r.json();
+    const messages = data.messages || [];
+    if (messages.length === 0) return;
+
+    chatArea.innerHTML = '';
+    appendSystem('Histórico restaurado — continuando de onde você parou.');
+    for (const m of messages) {
+      appendMessage(m.role === 'user' ? 'user' : 'assistant', m.content);
+    }
+  } catch {
+    // Sem histórico pra restaurar (ou servidor reiniciado do zero) — segue normal.
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════════════════════
 loadProviders();
 checkStatus();
+loadHistory();
 userInput.focus();
 </script>
 </body>
@@ -957,6 +982,25 @@ async def get_status():
         "refusal_retries": os.getenv("CASSANDRA_REFUSAL_RETRIES", "2"),
         "core_ok": CORE_OK,
     }
+
+
+@app.get("/api/history")
+async def get_history():
+    """
+    HooLeeSh33t v0.3 (adição autorizada por dSanT, ver REPO-LOCK.md).
+
+    A variável `conversation` já é global e persiste em memória
+    enquanto o processo roda (ver comentário acima dela) — isto só
+    expõe esse estado já existente pro front-end conseguir redesenhar
+    a tela ao carregar/voltar, sem perder o que já foi dito.
+    Não cria nenhum armazenamento novo, só lê o que já existia.
+    """
+    visible = [
+        {"role": m.get("role"), "content": m.get("content")}
+        for m in conversation
+        if m.get("role") in ("user", "assistant")
+    ]
+    return {"messages": visible}
 
 
 @app.post("/api/shell/toggle")

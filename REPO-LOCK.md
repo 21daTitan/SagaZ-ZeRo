@@ -71,13 +71,22 @@ LICENSE (se existir)
 
 ---
 
+## Exceções autorizadas (edições pontuais em arquivo travado)
+
+| Data | Arquivo | O que mudou | Autorizado por |
+|---|---|---|---|
+| 2026-11-09 | `web_ui.py` | Endpoint `GET /api/history` (expõe a `conversation` global já existente) + JS que redesenha o chat ao carregar a página | dSanT, pedido direto no chat — "quero que a memória fique pra quando eu voltar" |
+
+---
+
 ## Histórico de versões travadas
 
 | Versão | Commit | Data | O que mudou |
 |---|---|---|---|
 | Base (rebrand inicial) | `72920f2` | 2026-11-09 | Cassandra → SagaZ-ZeRo (nomes, cores, interface Matrix) |
 | HooLeeSh33t v0.1 | `6c1d652` | 2026-11-09 | Personas SagaZ/ZeRo, instaladores desktop, guia Android, esta trava |
-| HooLeeSh33t v0.2 | *(este commit)* | 2026-11-09 | `deploy-vps.sh`: deploy permanente em VPS (systemd + proxy autenticado) |
+| HooLeeSh33t v0.2 | `3f08055` | 2026-11-09 | `deploy-vps.sh`: deploy permanente em VPS (systemd + proxy autenticado) |
+| HooLeeSh33t v0.3 | *(este commit)* | 2026-11-09 | Acesso sem senha (opt-in pra religar), histórico visível ao voltar (exceção autorizada em `web_ui.py`) |
 
 ---
 
