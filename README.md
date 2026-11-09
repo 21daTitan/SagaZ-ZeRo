@@ -231,6 +231,17 @@ Esta edição (SagaZ-ZeRo HooLeeSh33t EdiTioN) não é uma publicação oficial 
 
 ---
 
+## 🆕 HooLeeSh33t v0.1 — Personas, Android rápido & instaladores desktop
+
+Saiu atualização, família. Sem tocar em uma linha do que já tava rodando:
+
+- **Personas visuais no terminal**: `sagaz` (azul, descontraído) e `zero` (vermelho/branco, direto ao ponto) — mesmo executor, duas caras, 3 modos de exibição. Detalhes completos em [`HOOLEESH33T-v0.1.md`](HOOLEESH33T-v0.1.md).
+- **Instalação rápida no Android (Termux)**: passo a passo testado na prática, com a gambiarra documentada pra não travar compilando nada. Veja [`INSTALL-ANDROID.md`](INSTALL-ANDROID.md).
+- **Instaladores automáticos pra desktop**: `install.sh` (Linux/macOS), `install.bat` e `install.ps1` (Windows) — criam o ambiente e instalam tudo sozinho.
+- **Regras de preservação do repositório**: o que já foi resolvido não é mais tocado a partir de agora. Ver [`REPO-LOCK.md`](REPO-LOCK.md).
+
+---
+
 <div align="center">
 
 ```

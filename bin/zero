@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# ⬢ ZeRo — persona vermelho/branco, sangue frio (HooLeeSh33t v0.1)
+# Mesmo executor que 'sagaz' e que agent.py puro — só muda a roupa.
+# Arquivo NOVO, não toca em nada já resolvido.
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+if command -v python3 >/dev/null 2>&1; then
+  PY=python3
+else
+  PY=python
+fi
+
+exec "$PY" "$DIR/sagaz_zero/persona_launcher.py" --as zero "$@"
