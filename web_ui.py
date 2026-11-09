@@ -113,7 +113,19 @@ HTML_CONTENT = r"""
     --font-mono: 'Courier New', Courier, monospace;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: var(--font-mono); }
+  /* "overflow: hidden" sozinho não trava scroll em todo navegador
+     mobile — existe um bug conhecido de "rubber-band scroll" por
+     toque (principalmente Android/iOS) que rola a página mesmo assim,
+     e some com o header lá em cima. position:fixed no html/body é a
+     técnica mais forte pra travar isso de vez, + overscroll-behavior
+     evita o efeito elástico que dispara o scroll em primeiro lugar. */
+  html, body {
+    height: 100%; width: 100%;
+    position: fixed; inset: 0;
+    overflow: hidden;
+    overscroll-behavior: none;
+    background: var(--bg); color: var(--text); font-family: var(--font-mono);
+  }
 
   /* ── MATRIX CANVAS ── */
   #matrix-canvas {
@@ -240,6 +252,9 @@ HTML_CONTENT = r"""
        cresce pra caber tudo em vez de rolar). */
     flex: 1 1 auto; min-height: 0;
     overflow-y: auto; overflow-x: hidden;
+    /* Contém o scroll aqui dentro — rolar até o fim do chat não
+       "vaza" pro body e puxa a página inteira junto. */
+    overscroll-behavior: contain;
     padding: 14px 0 10px;
     display: flex; flex-direction: column; gap: 12px;
     scroll-behavior: smooth;
@@ -317,6 +332,7 @@ HTML_CONTENT = r"""
     padding: 10px 12px; border-radius: var(--radius);
     outline: none; transition: border-color .2s, box-shadow .2s;
     overflow-y: auto; line-height: 1.5;
+    overscroll-behavior: contain;
   }
   #user-input:focus {
     border-color: var(--cyan);

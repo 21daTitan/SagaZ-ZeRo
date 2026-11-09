@@ -154,6 +154,31 @@ agent e device scale factor reais): header 47px, barra 134px, chat
 no meio é esperado (chat novo, sem credencial, sem mensagem) — não é
 mais bug de layout quebrado.
 
+## Correção adicional: "ficou um tempinho e sumiu o painel de cima"
+
+Depois do flexbox resolver o dimensionamento, ainda sobrou um sintoma
+diferente: o painel de cima (header + barra) sumia **depois de um
+tempo usando a página**, não direto no carregamento. Isso não é mais
+bug de CSS estático — é a página **rolando sozinha**.
+
+Causa: `overflow: hidden` no `html, body` não trava 100% o scroll em
+todo navegador mobile. Existe um comportamento conhecido de
+"rubber-band scroll" por toque (principalmente em Android/iOS) que
+ainda rola o documento mesmo com `overflow: hidden`, e como a página
+tem só a altura de `100vh`, rolar alguns pixels já empurra o header
+inteiro pra fora da tela — e ele não volta sozinho.
+
+**Fix:**
+- `html, body` ganharam `position: fixed; inset: 0; overscroll-behavior: none;`
+  — trava de scroll bem mais forte que só `overflow: hidden`.
+- `#chat-area` e `#user-input` (os dois elementos que legitimamente
+  rolam por dentro) ganharam `overscroll-behavior: contain` — rolar
+  até o fim de um deles não "vaza" o gesto pro body e puxa a página
+  inteira junto.
+
+Validado simulando 8 arrastos/toques seguidos via Playwright
+(Pixel 7): o header continua em `top: 0` depois de todos eles.
+
 ---
 
 ## O que NÃO foi tocado além do registrado
