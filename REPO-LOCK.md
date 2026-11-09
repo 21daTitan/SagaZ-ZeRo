@@ -76,7 +76,8 @@ LICENSE (se existir)
 | Versão | Commit | Data | O que mudou |
 |---|---|---|---|
 | Base (rebrand inicial) | `72920f2` | 2026-11-09 | Cassandra → SagaZ-ZeRo (nomes, cores, interface Matrix) |
-| HooLeeSh33t v0.1 | *(este commit)* | 2026-11-09 | Personas SagaZ/ZeRo, instaladores desktop, guia Android, esta trava |
+| HooLeeSh33t v0.1 | `6c1d652` | 2026-11-09 | Personas SagaZ/ZeRo, instaladores desktop, guia Android, esta trava |
+| HooLeeSh33t v0.2 | *(este commit)* | 2026-11-09 | `deploy-vps.sh`: deploy permanente em VPS (systemd + proxy autenticado) |
 
 ---
 

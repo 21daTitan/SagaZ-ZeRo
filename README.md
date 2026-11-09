@@ -240,6 +240,16 @@ Saiu atualização, família. Sem tocar em uma linha do que já tava rodando:
 - **Instaladores automáticos pra desktop**: `install.sh` (Linux/macOS), `install.bat` e `install.ps1` (Windows) — criam o ambiente e instalam tudo sozinho.
 - **Regras de preservação do repositório**: o que já foi resolvido não é mais tocado a partir de agora. Ver [`REPO-LOCK.md`](REPO-LOCK.md).
 
+## 🆕 HooLeeSh33t v0.2 — Deploy permanente em VPS
+
+Quer o SagaZ-ZeRo rodando 24/7 num servidor, acessível de qualquer rede, sem depender do seu celular ligado? Um comando só, dentro da sua VPS Linux (Ubuntu/Debian):
+
+```bash
+bash <(curl -fsSL https://raw.githubusercontent.com/21daTitan/SagaZ-ZeRo/main/deploy-vps.sh)
+```
+
+Sobe um serviço systemd com proxy autenticado na frente. Detalhes e notas de segurança em [`HOOLEESH33T-v0.2.md`](HOOLEESH33T-v0.2.md).
+
 ---
 
 <div align="center">
