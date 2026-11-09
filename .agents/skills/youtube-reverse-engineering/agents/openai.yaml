@@ -1,4 +1,0 @@
-interface:
-  display_name: "YouTube Reverse Engineering"
-  short_description: "Gabarito, retenção, CTA e análise com evidências"
-  default_prompt: "Use $youtube-reverse-engineering para extrair o gabarito e o macete deste vídeo."

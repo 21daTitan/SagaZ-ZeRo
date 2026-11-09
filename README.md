@@ -1,154 +1,241 @@
-# SagaZ-ZeRo · HooLeeSh33t Edition _by dSant_ 🧢⚡
+# ⬡ SagaZ-ZeRo — HooLeeSh33t EdiTioN by dSanT
 
-**Salve!** Isso aqui é a sua IA **do seu jeito** — multi-modelo, com a sua própria
-chave (BYOK), rodando na sua máquina, no seu VPS ou até no Termux. Sem firula, sem
-te prender: você manda, ela executa. Pega a visão? Então cola aí. 😎
+<div align="center">
 
-> Edição derivada da obra-prima **Cassandra**, criada pelo mestre **Mörlsara**
-> (_Morlsara Code Nexus_). A gente respeita a origem e põe a nossa manha por cima.
-> Crédito de quem fez vem sempre junto — malandragem é com honra. 🙏
->
-> 🇬🇧 English version: [`README.en.md`](README.en.md)
+```
+╔══════════════════════════════════════════════════════╗
+║   ⬡  SagaZ-ZeRo · HooLeeSh33t EdiTioN by dSanT  ⬡  ║
+║          Baseado em Evil Cassandra — Mörlsara        ║
+╚══════════════════════════════════════════════════════╝
+```
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-00f5ff?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-async-00f5ff?style=flat-square)](https://fastapi.tiangolo.com)
+[![License](https://img.shields.io/badge/Licença-MIT-00b8cc?style=flat-square)](LICENSE)
+[![Base](https://img.shields.io/badge/Base-Evil%20Cassandra-005a65?style=flat-square)](https://github.com/DarkyHArry/cassandra-agent)
+
+**Agente de IA multi-provedor com interface Web Matrix cyan e CLI de terminal.**  
+BYOK (Bring Your Own Key) — você traz a chave, a gente faz a magia rolar.
+
+</div>
 
 ---
 
-## O que esse bicho faz 🚀
+## 🎯 O que é isso?
 
-- 🔑 **BYOK** — você pluga **sua** chave (OpenAI-compatible: OpenAI, Claude, Gemini, Ollama local, seu endpoint…). Nada de chave nossa, nada de conta pra criar.
-- 🧠 **Multi-modelo** — troca de modelo na hora, sem drama.
-- 🖥️ **Duas caras, a mesma alma:** **HooLeeSh33t Matrix** (web) e o **Console Operador** (terminal/TUI).
-- 🤖 **Agente de código** — `sagaz agent` no estilo Claude Code: lê/edita arquivos, roda comando e mexe no Git **sob permissão e confirmação**. Veja [`docs/AGENT.md`](docs/AGENT.md).
-- 🧩 **Skills + Plugins** — memória de Discord (consentida e só-leitura), CTI, criativo dSant… e **plugins** que registram novas ferramentas.
-- 🔒 **Na responsa** — chave guardada em arquivo `0600`, ação destrutiva **sempre** pede confirmação, nada exposto na internet sem você mandar.
-- 🪶 **Leve que só** — o núcleo roda **só com Python padrão**. Zero `pip` obrigatório.
+Sabe quando você quer um agente de IA que conecta em **qualquer provedor** — OpenAI, DeepSeek, xAI Grok, Anthropic, Gemini, OpenRouter, Ollama local — sem depender de um único serviço?
+
+É isso. SagaZ-ZeRo é um **cliente de terminal + interface web** que você sobe localmente, bota sua chave API e conversa. Sem middleman, sem pagar além da API que você já tem.
+
+Base técnica: **Evil Cassandra** de [Mörlsara — Morlsara Code Nexus](https://github.com/DarkyHArry/cassandra-agent), que é uma das implementações mais completas que eu já vi. Peguei, dei um rebrand com tema Matrix ciano, rolei a interface nova e lancei como **HooLeeSh33t EdiTioN**.
+
+Créditos completos no arquivo [`cassandra/attribution.py`](cassandra/attribution.py) — não tiro crédito de ninguém, família.
 
 ---
 
-## 📦 Instalação — em qualquer terminal, qualquer sistema
+## ⚡ Features
 
-**Só precisa de 2 coisas:** `git` + `Python 3.10 ou mais novo`. O resto o próprio
-projeto já traz. Escolhe o seu sistema abaixo e cola os comandos:
+- 🌐 **Multi-provedor real** — OpenAI, DeepSeek, xAI/Grok, Anthropic, Gemini, OpenRouter, Ollama e outros compatíveis com o formato OpenAI Chat Completions
+- 💻 **CLI de terminal** — `agent.py` com cores ciano Matrix, streaming SSE, spinner de loading
+- 🖥️ **Web UI Matrix** — interface no navegador com Matrix rain animation, tema ciano, responsivo desktop/mobile
+- 🔑 **BYOK** — Bring Your Own Key. Você configura suas chaves, nenhuma credencial vai a lugar nenhum por padrão
+- 🧠 **Skillogy** — sistema de skills/instruções carregáveis (pasta `cassandra-skill/`)
+- 🔒 **Shell mode** — execução de comandos desativada por padrão. Ativa com `--allow-shell` só se souber o que tá fazendo
+- 📡 **Streaming** — respostas em tempo real via SSE
+- 🗜️ **Compactação de contexto** — contexto longo é compactado automaticamente pra economizar tokens
+- 🛠️ **Tool fetch** — baixa ferramentas sob demanda quando o agente solicita
 
-### 🐧 Linux
+---
+
+## 🚀 Instalação rápida
+
+### Pré-requisitos
+- Python 3.10 ou superior
+- `pip` atualizado
+
+### Clone e roda
+
 ```bash
-# Debian / Ubuntu / Mint / Pop!_OS
-sudo apt update && sudo apt install -y git python3
-# Fedora:   sudo dnf install -y git python3
-# Arch:     sudo pacman -S --needed git python
-
+# Clona o repo
 git clone https://github.com/21daTitan/SagaZ-ZeRo.git
 cd SagaZ-ZeRo
-python3 -m sagaz operator
+
+# Cria venv (recomendado)
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate    # Windows
+
+# Instala dependências
+pip install -r requirements.txt
+
+# Copia e edita o .env
+cp .env.example .env
+# Edita o .env com suas chaves API
+
+# Roda a interface web (abre em http://localhost:8080)
+./sagaz-zero.sh web
+# ou
+python web_ui.py --web
+
+# Roda o CLI de terminal
+./sagaz-zero.sh
+# ou
+python agent.py
 ```
 
-### 🍎 macOS
-```bash
-# Precisa do Homebrew (brew.sh). Depois:
-brew install git python
-git clone https://github.com/21daTitan/SagaZ-ZeRo.git
-cd SagaZ-ZeRo
-python3 -m sagaz operator
-```
+### Windows
 
-### 🪟 Windows (PowerShell)
 ```powershell
-winget install Git.Git Python.Python.3.12
-# feche e reabra o PowerShell depois de instalar
-git clone https://github.com/21daTitan/SagaZ-ZeRo.git
-cd SagaZ-ZeRo
-python -m sagaz operator       # no Windows é "python", sem o 3
+.\sagaz-zero.bat web   # interface web
+.\sagaz-zero.bat       # CLI terminal
 ```
 
-### 📱 Android (Termux)
-```bash
-pkg update && pkg install -y git python
-git clone https://github.com/21daTitan/SagaZ-ZeRo.git
-cd SagaZ-ZeRo
-python -m sagaz operator
+```powershell
+.\sagaz-zero.ps1 web   # PowerShell
 ```
-
-> **Importante:** rode sempre de **dentro** da pasta `SagaZ-ZeRo` (é de lá que o
-> `python -m sagaz` acha o projeto).
->
-> **Quer um comando global `sagaz`?** (opcional) `pip install -e .` dentro da pasta.
->
-> **Skills de mídia** (voz, vídeo, legenda) são **opcionais**:
-> `pip install -r requirements-media.txt`.
 
 ---
 
-## ▶️ Primeira vez: conectar e conversar
+## ⚙️ Configuração
 
-```bash
-python3 -m sagaz doctor        # 1) checa se tá tudo nos trinques
-python3 -m sagaz operator      # 2) abre o console operador
-#   lá dentro:
-#     /conectar  → cola seu endpoint (/v1), modelo e a chave (fica oculta)
-#     /testar    → confirma que o modelo respondeu
-#     aí é só digitar e conversar de verdade 💬
+Copie `.env.example` para `.env` e preencha com suas chaves:
+
+```env
+# Exemplo com OpenAI
+SAGAZ_ZERO_API_KEY=sk-...
+SAGAZ_ZERO_BASE_URL=https://api.openai.com/v1
+SAGAZ_ZERO_MODEL=gpt-4o
+
+# Exemplo com DeepSeek
+SAGAZ_ZERO_API_KEY=sk-...
+SAGAZ_ZERO_BASE_URL=https://api.deepseek.com/v1
+
+# Exemplo com xAI Grok
+SAGAZ_ZERO_API_KEY=xai-...
+SAGAZ_ZERO_BASE_URL=https://api.x.ai/v1
+
+# Variáveis CASSANDRA_* também são reconhecidas (compatibilidade)
 ```
 
-Quer a interface web bonitona?
-```bash
-python3 -m sagaz --web --port 8080
-#   abre http://127.0.0.1:8080  (no VPS, use túnel SSH — não exponha a porta crua!)
-```
-Conectou o provedor? **O chat da web já fala com o modelo de verdade**, automático.
-Sem provedor, o Core ainda prepara seu briefing localmente. Tá sempre fazendo algo. 👊
+Ou configure diretamente na interface web em **⚙ Configurações** sem precisar editar arquivos.
 
 ---
 
-## 🎛️ Comandos que você vai usar
+## 🌐 Interface Web
 
-| Comando | O que faz |
+Sobe o servidor e acessa no navegador:
+
+```
+http://localhost:8080
+```
+
+A interface tem:
+- **Matrix rain** na tela (tipo o filme, sabe né)
+- Seleção de provider e modelo na barra superior
+- Chat com streaming em tempo real
+- Configuração de chave API inline (fica salvo na sessão)
+- Toggle de shell mode
+- Responsivo em mobile
+
+---
+
+## 💻 CLI de Terminal
+
+```bash
+# Modo interativo padrão
+python agent.py
+
+# Com shell habilitado (cuidado!)
+python agent.py --allow-shell
+
+# Apontar pra um provedor específico
+python agent.py --provider deepseek --model deepseek-chat
+
+# Usar porta diferente na web
+python agent.py --web --port 9090
+```
+
+Dentro do CLI:
+- `:sair` — encerra
+- `:limpar` — limpa o histórico da conversa
+- `:log` — mostra o log de atividade
+- `:skill <nome>` — carrega uma skill específica
+
+---
+
+## 🔌 Provedores suportados
+
+| Provider | Base URL padrão |
 |---|---|
-| `python3 -m sagaz operator` | Console operador (TUI) com chat real |
-| `python3 -m sagaz --web` | Interface web HooLeeSh33t Matrix |
-| `python3 -m sagaz agent "<objetivo>"` | Agente de código (lê/edita/roda/git sob permissão) |
-| `python3 -m sagaz plugin list` | Lista plugins instalados |
-| `python3 -m sagaz desktop` | Abre a HooLeeSh33t Matrix como app |
-| `python3 -m sagaz agent "<obj>" --sandbox` | Agente rodando comando em container isolado |
-| `python3 -m sagaz god [deus\|devocional]` | Mostra/escolhe o perfil de autonomia |
-| `python3 -m sagaz discord ingest msgs.json --consent` | Memória Discord (consentida, local) |
-| `python3 -m sagaz doctor` | Diagnóstico rápido do núcleo |
-
-Na interface, digite `/ajuda` pra ver tudo: `/cti`, `/skills`, `/status`, `/god`, `/discord`, `/criar`.
+| OpenAI | `https://api.openai.com/v1` |
+| DeepSeek | `https://api.deepseek.com/v1` |
+| xAI / Grok | `https://api.x.ai/v1` |
+| Anthropic | `https://api.anthropic.com/v1` (via proxy compat) |
+| Gemini | `https://generativelanguage.googleapis.com/v1beta/openai` |
+| OpenRouter | `https://openrouter.ai/api/v1` |
+| Ollama (local) | `http://localhost:11434/v1` |
+| Qualquer OpenAI-compat | URL customizável |
 
 ---
 
-## 🔄 Atualizar sem perder o seu edit
+## 📁 Estrutura
 
-A Cassandra evolui lá na origem; a gente puxa as melhorias **sem apagar a sua manha**.
-Passo a passo em **[`docs/UPSTREAM.md`](docs/UPSTREAM.md)** (porte revisado, nada de
-merge na doida). Doutrinão completo em **[`docs/MASTER-PROMPT-SAGAZ.md`](docs/MASTER-PROMPT-SAGAZ.md)**.
-
-Já tem o projeto clonado e quer só a versão nova?
-```bash
-cd SagaZ-ZeRo
-git pull
+```
+SagaZ-ZeRo/
+├── agent.py              # CLI de terminal (entrada principal)
+├── web_ui.py             # Servidor web FastAPI
+├── cassandra/            # Núcleo técnico (preservado integralmente)
+│   ├── client.py         # CassandraClient multi-provedor
+│   ├── providers.py      # Catálogo de provedores
+│   ├── filter.py         # Filtros e proteções
+│   ├── compact.py        # Compactação de contexto
+│   ├── environment.py    # Ambiente e skills
+│   ├── toolfetch.py      # Download de ferramentas sob demanda
+│   ├── crypto.py         # Criptografia
+│   ├── guard.py          # Proteções
+│   └── attribution.py    # Créditos do autor original ← NÃO ALTERAR
+├── cassandra-skill/      # 655+ arquivos de skill
+├── sagaz_zero/           # Alias de compatibilidade
+├── sagaz-zero.sh         # Launcher Linux/macOS
+├── sagaz-zero.bat        # Launcher Windows CMD
+├── sagaz-zero.ps1        # Launcher Windows PowerShell
+├── requirements.txt
+├── .env.example
+└── NOTICE-SAGAZ.md       # Créditos desta edição
 ```
 
 ---
 
-## ✋ Na faixa da responsa
+## ⚠️ Aviso importante
 
-Essa edição **não** embute ferramentas de evasão de filtro / anti-censura / exploração
-ofensiva — escolha nossa, tá no [`NOTICE.md`](NOTICE.md). SagaZ-ZeRo é pra construir,
-automatizar e criar na responsa. Antes de ligar bot de Discord, confere
-[`docs/DISCORD_MEMORY.md`](docs/DISCORD_MEMORY.md) e [`docs/GOD_MODE.md`](docs/GOD_MODE.md).
+**Shell mode desativado por padrão.** Se você habilitar `--allow-shell`, o agente pode executar comandos no seu sistema sem pedir confirmação. Use só se souber o que tá fazendo e em ambiente controlado.
 
----
-
-## 🫡 Créditos
-
-- **Edição:** SagaZ-ZeRo · HooLeeSh33t Edition — **by dSant** (`@21daTitan`, _Systemia Solutions_)
-- **Obra original:** **Cassandra**, criada por **Mörlsara** — _Morlsara Code Nexus_
-- **Upstream:** https://github.com/DarkyHArry/cassandra-agent
-
-Tamo junto. Jaé! 🤝
+**BYOK:** Nenhuma chave API é incluída. Você é responsável pelas suas credenciais. Não commita `.env` com chaves reais.
 
 ---
 
-```bash
-python3 -m unittest discover -s tests -q   # roda a bateria de testes
+## 🏆 Créditos e agradecimentos
+
+**Base técnica:** [Evil Cassandra](https://github.com/DarkyHArry/cassandra-agent) por **Mörlsara — Morlsara Code Nexus**  
+Todo o núcleo multi-provedor, streaming SSE, sistema de skills, compactação de contexto e arquitetura é obra do Mörlsara. Bora dar o crédito onde é devido.
+
+**Esta edição:** dSanT — HooLeeSh33t EdiTioN  
+Rebrand visual, interface web Matrix cyan, launchers e ajustes de identidade.
+
+---
+
+## 📄 Licença
+
+Veja o arquivo [`LICENSE`](LICENSE) para a licença do projeto base.  
+Esta edição (SagaZ-ZeRo HooLeeSh33t EdiTioN) não é uma publicação oficial do autor original.
+
+---
+
+<div align="center">
+
 ```
+⬡ SagaZ-ZeRo · HooLeeSh33t EdiTioN by dSanT ⬡
+Feito no RJ · Base: Evil Cassandra — Mörlsara Code Nexus
+```
+
+</div>

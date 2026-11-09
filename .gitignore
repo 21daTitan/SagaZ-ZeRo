@@ -1,19 +1,24 @@
+# Ignorar pastas de log e env
+logs/
+recon/
 .env
-.env.*
-!.env.example
-.venv/
 __pycache__/
-*.py[cod]
-.pytest_cache/
-node_modules/
-projects/
-state/
-exports/
-backups/
-dist/
-.claude/skills/
-.opencode/skills/
-*.log
+*.pyc
 
-# Habilitação local de plugins (por usuário)
-plugins/enabled.json
+# Não ignorar a pasta skills se houver arquivos além de gitkeep
+!skills/
+!skills/.gitkeep
+.venv/
+.vscode/
+payload.json
+*.probe.txt
+MODELOS-*.md
+tests/
+*.lock
+.pytest_cache/
+
+# Curator / Skillogy state files
+.locks/
+.curator_state
+.curator_ledger.jsonl
+.bundled_manifest
