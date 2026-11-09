@@ -88,6 +88,28 @@ front-end que eu tinha reescrito do zero sem conferir o formato real
 contra o backend e contra a interface original — essa versão corrige
 isso.
 
+## Correção adicional: o buraco preto gigante (bug de grid CSS)
+
+Depois do conserto acima, ainda sobrou o maior sintoma visual: um
+buraco preto enorme entre a barra de provider/modelo e as mensagens.
+Causa raiz, confirmada renderizando a página localmente (Playwright,
+viewport mobile) e inspecionando o layout:
+
+`#app` é um CSS grid com `grid-template-rows: auto 1fr auto` — **3
+linhas** — só que tem **4 filhos diretos**: `header`, `#provider-bar`,
+`#chat-area`, `#input-area`. O grid casa as linhas explícitas na
+ordem do DOM, então o `1fr` (que devia esticar o `#chat-area`) caía
+em cima do `#provider-bar`, esticando ele — vazio — até quase a tela
+inteira, e empurrando o chat pra uma faixinha minúscula no fim. O
+`#chat-area` caiu numa linha implícita de tamanho automático. Esse
+bug **já existia antes** da reescrita Matrix cyan; só ficou
+gigantesco agora porque a barra de badges/pills do conserto acima
+ocupa mais espaço de conteúdo, mas o buraco em si sempre foi esse
+grid mal dimensionado, não os pills.
+
+**Fix:** `grid-template-rows: auto auto 1fr auto` — 4 linhas pros 4
+filhos, `1fr` agora cai certinho no `#chat-area`.
+
 ---
 
 ## O que NÃO foi tocado além do registrado

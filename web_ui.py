@@ -122,10 +122,17 @@ HTML_CONTENT = r"""
   }
 
   /* ── LAYOUT ── */
+  /* #app tem 4 filhos diretos (header, provider-bar, chat-area,
+     input-area), mas isso aqui definia só 3 "linhas" de grid — o
+     filho a mais caía numa linha implícita, e o 1fr (que deveria ir
+     pro chat-area) acabava preso na provider-bar, esticando ela até
+     quase a tela inteira (vazia) e espremendo o chat numa faixa
+     minúscula. É isso que causava o buraco preto gigante entre a
+     barra de provider/modelo e as mensagens. 4 filhos, 4 linhas. */
   #app {
     position: relative; z-index: 1;
     display: grid;
-    grid-template-rows: auto 1fr auto;
+    grid-template-rows: auto auto 1fr auto;
     height: 100vh;
     max-width: 980px;
     margin: 0 auto;

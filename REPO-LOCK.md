@@ -77,6 +77,7 @@ LICENSE (se existir)
 |---|---|---|---|
 | 2026-11-09 | `web_ui.py` | Endpoint `GET /api/history` (expõe a `conversation` global já existente) + JS que redesenha o chat ao carregar a página | dSanT, pedido direto no chat — "quero que a memória fique pra quando eu voltar" |
 | 2026-11-09 | `web_ui.py` | Conserto da interface Web (só dentro de `HTML_CONTENT`, nenhuma rota de backend tocada): provider/modelo paravam de virar `[object Object]`, status de shell/cifrado/sanitizado/anti-recusa paravam de nunca atualizar, credenciais paravam de poder forçar provider/base_url/modelo | dSanT, pedido direto no chat — "a interface tá uma merda... corrija e atualize a interface" |
+| 2026-11-09 | `web_ui.py` | `#app` tinha `grid-template-rows: auto 1fr auto` (3 linhas) pra 4 filhos (header/provider-bar/chat-area/input-area) — o `1fr` caía na provider-bar e esticava ela (vazia) quase até a tela inteira, criando o buraco preto gigante. Corrigido pra `auto auto 1fr auto` | dSanT, print mostrando o buraco preto gigante mesmo após o conserto anterior |
 
 ---
 
